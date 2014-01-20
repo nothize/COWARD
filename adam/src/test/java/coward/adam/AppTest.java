@@ -11,22 +11,21 @@ import org.junit.Test;
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-{
+public class AppTest {
 
-    /**
-     * Rigourous Test :-)
-     */
-    @Test
-    public void testApp() throws IOException
-    {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		PrintStream ps = new PrintStream(baos);
+	/**
+	 * Rigourous Test :-)
+	 */
+	@Test
+	public void testApp() throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
+		try(PrintStream ps = new PrintStream(baos)){
 		System.setOut(ps);
 		App.main(new String[0]);
-		ps.close();
+		}
+		
 		String s = new String(baos.toByteArray(), "UTF-8");
 		assertEquals("Hello World!" + System.lineSeparator(), s);
-    }
-
+	}
 }
