@@ -19,13 +19,14 @@ public class AppTest {
 	@Test
 	public void testApp() throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		
-		try(PrintStream ps = new PrintStream(baos)){
-		System.setOut(ps);
-		App.main(new String[0]);
+
+		try (PrintStream ps = new PrintStream(baos)) {
+			System.setOut(ps);
+			App.main(new String[0]);
 		}
-		
+
 		String s = new String(baos.toByteArray(), "UTF-8");
 		assertEquals("Hello World!" + System.lineSeparator(), s);
 	}
+
 }
