@@ -26,7 +26,7 @@ public class AppTest
 		App.main(new String[0]);
 		ps.close();
 		String s = new String(baos.toByteArray(), "UTF-8");
-		assertEquals("Hello World!\r\n", s);
+		assertEquals("Hello World!" + System.lineSeparator(), s);
     }
 
 }
