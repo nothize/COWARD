@@ -1,4 +1,4 @@
-package coward.adam;
+package coward;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import org.junit.Test;
+
+import coward.App;
 
 /**
  * Unit test for simple App.

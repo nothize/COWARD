@@ -1,4 +1,4 @@
-package coward.adam;
+package coward;
 
 /**
  * Hello world!
