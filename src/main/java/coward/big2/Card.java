@@ -33,4 +33,21 @@ public class Card {
 		return rank;
 	}
 
+	@Override
+	public int hashCode() {
+		int result = 1;
+		result = 31 * result + (rank != null ? rank.hashCode() : 0);
+		result = 31 * result + (suit != null ? suit.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof Card) {
+			Card card = (Card) object;
+			return card.suit == suit && card.rank == rank;
+		} else
+			return false;
+	}
+
 }
