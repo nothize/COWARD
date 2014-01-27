@@ -6,19 +6,19 @@ import java.util.List;
 public class Card {
 
 	private Suit suit;
-	private FaceValue faceValue;
+	private Rank rank;
 
 	private static List<Card> allCards = new ArrayList<>();
 
 	static {
 		for (Suit suit : Suit.values())
-			for (FaceValue faceValue : FaceValue.values())
-				allCards.add(new Card(suit, faceValue));
+			for (Rank rank : Rank.values())
+				allCards.add(new Card(suit, rank));
 	}
 
-	public Card(Suit suit, FaceValue faceValue) {
+	public Card(Suit suit, Rank rank) {
 		this.suit = suit;
-		this.faceValue = faceValue;
+		this.rank = rank;
 	}
 
 	public static List<Card> allCards() {
@@ -29,8 +29,8 @@ public class Card {
 		return suit;
 	}
 
-	public FaceValue getFaceValue() {
-		return faceValue;
+	public Rank getRank() {
+		return rank;
 	}
 
 }
