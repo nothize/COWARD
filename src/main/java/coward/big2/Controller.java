@@ -19,12 +19,11 @@ public class Controller {
 			cards.set(j, temp);
 		}
 
-		int nCardsPerPlayer = 13;
 		Hand[] hands = new Hand[Big2Constants.nPlayers];
 		int start = 0;
 
 		for (int player = 0; player < Big2Constants.nPlayers; player++) {
-			int end = start + nCardsPerPlayer;
+			int end = start + Big2Constants.nCardsPerPlayer;
 			hands[player] = new Hand(cards.subList(start, end));
 			start = end;
 		}
