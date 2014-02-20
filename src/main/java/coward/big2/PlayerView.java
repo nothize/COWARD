@@ -1,13 +1,13 @@
 package coward.big2;
 
 import java.util.List;
-import java.util.Set;
 
 import coward.immutable.ImmutableSet;
 
 /**
  * What a player sees when he is the current player.
- * 
+ * TODO implements the interface
+ *
  * @author ywsing
  */
 public interface PlayerView {
