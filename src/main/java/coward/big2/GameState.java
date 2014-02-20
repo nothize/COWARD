@@ -1,14 +1,13 @@
 package coward.big2;
 
-import java.util.HashSet;
-import java.util.Set;
+import coward.immutable.ImmutableSet;
 
 public class GameState {
 
 	private Hand[] hands;
-	private Set<Card> playedCards = new HashSet<>();
+	private ImmutableSet<Card> playedCards = new ImmutableSet<>();
 
-	public GameState(Hand[] hands, Set<Card> playedCards) {
+	public GameState(Hand[] hands, ImmutableSet<Card> playedCards) {
 		this.hands = hands;
 		this.playedCards = playedCards;
 	}
@@ -17,7 +16,7 @@ public class GameState {
 		return hands;
 	}
 
-	public Set<Card> getPlayedCards() {
+	public ImmutableSet<Card> getPlayedCards() {
 		return playedCards;
 	}
 

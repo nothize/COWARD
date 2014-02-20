@@ -3,7 +3,7 @@ package coward.big2;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Card {
+public class Card implements Comparable<Card> {
 
 	private Suit suit;
 	private Rank rank;
@@ -31,6 +31,14 @@ public class Card {
 
 	public Rank getRank() {
 		return rank;
+	}
+
+	@Override
+	public int compareTo(Card card) {
+		int c = 0;
+		c = c == 0 ? -(suit.ordinal() - card.suit.ordinal()) : c;
+		c = c == 0 ? Rank.big2Comparator.compare(rank, card.rank) : c;
+		return c;
 	}
 
 	@Override

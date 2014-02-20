@@ -1,9 +1,10 @@
 package coward.big2;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+
+import coward.immutable.ImmutableSet;
 
 public class Controller {
 
@@ -28,7 +29,7 @@ public class Controller {
 			start = end;
 		}
 
-		return new GameState(hands, new HashSet<Card>());
+		return new GameState(hands, new ImmutableSet<Card>());
 	}
 
 }
