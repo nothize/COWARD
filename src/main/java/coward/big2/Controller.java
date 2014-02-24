@@ -29,7 +29,7 @@ public class Controller {
 			start = end;
 		}
 
-		return new GameState(hands, new ImmutableSet<Card>());
+		return new GameState(hands, new ArrayList<ImmutableSet<Card>>());
 	}
 
 }
