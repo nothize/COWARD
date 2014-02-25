@@ -58,4 +58,8 @@ public class Card implements Comparable<Card> {
 			return false;
 	}
 
+	@Override
+	public String toString() {
+		return " A 2 3 4 5 6 7 8 910 J Q K".substring(rank.ordinal(), rank.ordinal() + 2).trim() + "\u2660\u2665\u2663\u2666".charAt(suit.ordinal());
+	}
 }
