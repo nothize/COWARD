@@ -9,6 +9,9 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+
+import com.google.common.collect.Iterators;
 
 public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T> {
 
@@ -32,6 +35,12 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 			this.slots = slots;
 			this.pivot = pivot;
 		}
+	}
+
+	public ImmutableSet(Collection<T> col) {
+		this();
+		for (T t : col)
+			root = add(root, t, false);
 	}
 
 	public ImmutableSet() {
@@ -143,6 +152,10 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 		return c == 0 ? slot.pivot : null;
 	}
 
+	public int size() {
+		return Iterators.size(iterator());
+	}
+
 	public ImmutableSet<T> add(T t) {
 		return add(t, false);
 	}
@@ -158,11 +171,18 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 	}
 
 	public ImmutableSet<T> remove(T t) {
-		return new ImmutableSet<T>(comparator, createRootNode(remove(root, t)));
+		return new ImmutableSet<>(comparator, createRootNode(remove(root, t)));
+	}
+
+	public ImmutableSet<T> removeAll(ImmutableSet<T> col) {
+		List<Slot> node = root;
+		for (T t : col)
+			node = createRootNode(remove(node, t));
+		return new ImmutableSet<>(comparator, node);
 	}
 
 	private ImmutableSet<T> add(T t, boolean isReplace) {
-		return new ImmutableSet<T>(comparator, createRootNode(add(root, t, isReplace)));
+		return new ImmutableSet<>(comparator, createRootNode(add(root, t, isReplace)));
 	}
 
 	private List<Slot> add(List<Slot> node0, T t, boolean isReplace) {
@@ -284,6 +304,31 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 		return sb.toString();
 	}
 
+	@Override
+	public boolean equals(Object object) {
+		if (object.getClass() == getClass()) {
+			ImmutableSet<?> other = (ImmutableSet<?>) object;
+			Iterator<T> iter0 = this.iterator();
+			Iterator<?> iter1 = other.iterator();
+
+			while (iter0.hasNext() && iter1.hasNext())
+				if (!Objects.equals(iter0.next(), iter1.next()))
+					return false;
+
+			return iter0.hasNext() == iter1.hasNext();
+		} else
+			return false;
+	}
+
+	@Override
+	public int hashCode() {
+		int prime = 31;
+		int result = 1;
+		for (T t : this)
+			result = prime * result + (t != null ? t.hashCode() : 0);
+		return result;
+	}
+
 	@SafeVarargs
 	public final List<Slot> add(List<Slot>... lists) {
 		List<Slot> resultList = new ArrayList<>();
@@ -293,11 +338,17 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 	}
 
 	private List<Slot> left(List<Slot> list, int pos) {
-		return list.subList(0, pos);
+		int size = list.size();
+		if (pos < 0)
+			pos += size;
+		return list.subList(0, Math.min(size, pos));
 	}
 
 	private List<Slot> right(List<Slot> list, int pos) {
-		return list.subList(pos, list.size());
+		int size = list.size();
+		if (pos < 0)
+			pos += size;
+		return list.subList(Math.min(size, pos), size);
 	}
 
 	public Slot first(Collection<Slot> c) {

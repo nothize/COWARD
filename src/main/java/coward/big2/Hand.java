@@ -1,16 +1,16 @@
 package coward.big2;
 
-import java.util.List;
+import coward.immutable.ImmutableSet;
 
 public class Hand {
 
-	private List<Card> cards;
+	private ImmutableSet<Card> cards;
 
-	public Hand(List<Card> cards) {
+	public Hand(ImmutableSet<Card> cards) {
 		this.cards = cards;
 	}
 
-	public List<Card> getCards() {
+	public ImmutableSet<Card> getCards() {
 		return cards;
 	}
 

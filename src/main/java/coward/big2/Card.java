@@ -58,4 +58,9 @@ public class Card implements Comparable<Card> {
 			return false;
 	}
 
+	@Override
+	public String toString() {
+		return rank.toString() + suit.name().charAt(0);
+	}
+
 }
