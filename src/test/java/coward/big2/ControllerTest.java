@@ -40,6 +40,8 @@ public class ControllerTest {
 		for (int player = 0; player < Big2Constants.nPlayers; player++)
 			assertEquals(13 - 10, gameState.getHands()[player].getCards().size());
 		assertEquals(10 * Big2Constants.nPlayers, gameState.getPlayedCards().size());
+
+		System.out.println(gameState.toString());
 	}
 
 }
