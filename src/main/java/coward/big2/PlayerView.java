@@ -1,7 +1,6 @@
 package coward.big2;
 
 import java.util.List;
-import java.util.Set;
 
 import coward.immutable.ImmutableSet;
 
