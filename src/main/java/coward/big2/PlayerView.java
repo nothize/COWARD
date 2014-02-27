@@ -1,12 +1,12 @@
 package coward.big2;
 
-import java.util.List;
-
+import coward.immutable.ImmutableList;
 import coward.immutable.ImmutableSet;
 
 /**
  * What a player sees when he is the current player.
- * 
+ * TODO implements the interface
+ *
  * @author ywsing
  */
 public interface PlayerView {
@@ -19,7 +19,7 @@ public interface PlayerView {
 	/**
 	 * @return history of previously played cards, starting from player 0.
 	 */
-	public List<ImmutableSet<Card>> getPlayedCards();
+	public ImmutableList<ImmutableSet<Card>> getPlayedCards();
 
 	/**
 	 * @return the player's own hand.
