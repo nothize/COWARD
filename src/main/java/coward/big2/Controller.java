@@ -49,18 +49,44 @@ public class Controller {
 	}
 
 	/**
+	 * @param currentGameState
+	 * @param lastGameState
 	 * @return
 	 * the player who:
 	 * 1. if this is the first round, the one who got Diamond 3
 	 * 2. if this is not the first round, the one who won in last round
 	 */
-	public int findFirstPlayer() {
-		// TODO refer javadoc
+	public int findFirstPlayer(GameState currentGameState, GameState lastGameState) {
+		if ( lastGameState != null ) {
+			Hand[] hands = lastGameState.getHands();
+			for (int j = 0; j < hands.length; j++) {
+				if ( hands[j].getCards().size() == 0 ) {
+					return j;
+				}
+			}
+		}
+		Hand[] hands = lastGameState.getHands();
+		for (int j = 0; j < hands.length; j++) {
+			if ( hands[j].getCards().find(new Card(Suit.DIAMOND, Rank.N3___)) != null ) {
+				return j;
+			}
+		}
+		
 		return 0;
 	}
 
-	public boolean endGame() {
-		// TODO
+	public boolean endGame(GameState gs) {
+		Hand[] hands = gs.getHands();
+		for (Hand hand : hands) {
+			if ( hand.getCards().size() == 0 ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// TODO Determine if the player want to play another game
+	public boolean playAgain() {
 		return false;
 	}
 
