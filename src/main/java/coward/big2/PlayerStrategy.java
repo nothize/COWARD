@@ -1,6 +1,6 @@
 package coward.big2;
 
-import java.util.Set;
+import coward.immutable.ImmutableSet;
 
 /**
  * How a player plays.
@@ -14,6 +14,6 @@ public interface PlayerStrategy {
 	 * @return the player's decision (what card to play) when given a view to a
 	 *         game.
 	 */
-	public Set<Card> play(PlayerView view);
+	public ImmutableSet<Card> play(PlayerView view);
 
 }
