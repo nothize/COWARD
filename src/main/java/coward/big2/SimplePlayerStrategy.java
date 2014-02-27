@@ -1,8 +1,5 @@
 package coward.big2;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import coward.immutable.ImmutableSet;
 
 public class SimplePlayerStrategy implements PlayerStrategy {
@@ -12,13 +9,10 @@ public class SimplePlayerStrategy implements PlayerStrategy {
 	}
 
 	@Override
-	public Set<Card> play(PlayerView view) {
+	public ImmutableSet<Card> play(PlayerView view) {
 		Hand h = view.getHand();
 		ImmutableSet<Card> cards = h.getCards();
-		
-		HashSet<Card> play = new HashSet<Card>();
-		play.add(cards.iterator().next());
-		return play;
+		return new ImmutableSet<Card>().add(cards.iterator().next());
 	}
 
 }

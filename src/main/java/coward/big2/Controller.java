@@ -48,4 +48,14 @@ public class Controller {
 		return new GameState(hands1, playedCards1);
 	}
 
+	public int findFirstPlayer() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public boolean endGame() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
