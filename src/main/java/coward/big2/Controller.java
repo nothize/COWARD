@@ -48,13 +48,19 @@ public class Controller {
 		return new GameState(hands1, playedCards1);
 	}
 
+	/**
+	 * @return
+	 * the player who:
+	 * 1. if this is the first round, the one who got Diamond 3
+	 * 2. if this is not the first round, the one who won in last round
+	 */
 	public int findFirstPlayer() {
-		// TODO Auto-generated method stub
+		// TODO refer javadoc
 		return 0;
 	}
 
 	public boolean endGame() {
-		// TODO Auto-generated method stub
+		// TODO
 		return false;
 	}
 

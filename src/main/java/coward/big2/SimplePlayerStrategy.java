@@ -4,10 +4,6 @@ import coward.immutable.ImmutableSet;
 
 public class SimplePlayerStrategy implements PlayerStrategy {
 
-	public SimplePlayerStrategy() {
-		// TODO Auto-generated constructor stub
-	}
-
 	@Override
 	public ImmutableSet<Card> play(PlayerView view) {
 		Hand h = view.getHand();
