@@ -1,6 +1,6 @@
 package coward.big2;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -49,5 +49,4 @@ public class ControllerTest {
 
 		System.out.println(gameState.toString());
 	}
-
 }
