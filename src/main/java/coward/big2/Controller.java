@@ -65,7 +65,7 @@ public class Controller {
 				}
 			}
 		}
-		Hand[] hands = lastGameState.getHands();
+		Hand[] hands = currentGameState.getHands();
 		for (int j = 0; j < hands.length; j++) {
 			if ( hands[j].getCards().find(new Card(Suit.DIAMOND, Rank.N3___)) != null ) {
 				return j;
