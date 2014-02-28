@@ -40,7 +40,7 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 	public ImmutableSet(Collection<T> col) {
 		this();
 		for (T t : col)
-			root = add(root, t, false);
+			root = createRootNode(add(root, t, false));
 	}
 
 	public ImmutableSet() {
