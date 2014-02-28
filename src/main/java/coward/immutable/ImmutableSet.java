@@ -152,6 +152,10 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 		return c == 0 ? slot.pivot : null;
 	}
 
+	public boolean isEmpty() {
+		return root.get(0).pivot == null; // Only terminating node exists
+	}
+
 	public int size() {
 		return Iterators.size(iterator());
 	}

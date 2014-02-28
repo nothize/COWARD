@@ -60,7 +60,7 @@ public class Controller {
 		if ( lastGameState != null ) {
 			Hand[] hands = lastGameState.getHands();
 			for (int j = 0; j < hands.length; j++) {
-				if ( hands[j].getCards().size() == 0 ) {
+				if ( hands[j].getCards().isEmpty() ) {
 					return j;
 				}
 			}
@@ -78,7 +78,7 @@ public class Controller {
 	public boolean endGame(GameState gs) {
 		Hand[] hands = gs.getHands();
 		for (Hand hand : hands) {
-			if ( hand.getCards().size() == 0 ) {
+			if ( hand.getCards().isEmpty() ) {
 				return true;
 			}
 		}
