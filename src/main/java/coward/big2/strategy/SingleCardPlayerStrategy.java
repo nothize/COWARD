@@ -27,7 +27,7 @@ public class SingleCardPlayerStrategy implements PlayerStrategy {
 			Card lastPlayedCard = lastPlayedCards.iterator().next();
 
 			// Have to follow with a single card, choose any card larger than
-			// him
+			// his
 			for (Card card : cards)
 				if (card.compareTo(lastPlayedCard) > 0)
 					return new ImmutableSet<Card>().add(card);
