@@ -7,27 +7,16 @@ import coward.big2.card.Card;
 import coward.immutable.ImmutableSet;
 
 /**
- * A player strategy
+ * A player strategy to play the smallest single card if possible.
  * 
  * @author ywsing
- * 
  */
 public class SingleCardPlayerStrategy implements PlayerStrategy {
 
 	@Override
 	public ImmutableSet<Card> play(PlayerView view) {
 
-		// Finds out the last move by any player, excluding those who passed.
-		// If current player controls the game (i.e. he do not need to follow
-		// the previous move), lastPlayedCards would be null.
-		ImmutableSet<Card> lastPlayedCards = null;
-
-		for (GameMove move : view.getPlayedMoves())
-			if (!move.getPlayedCards().isEmpty()) {
-				lastPlayedCards = move.getPlayedCards();
-				break;
-			} else if (move.getPlayer() == view.currentPlayerNum())
-				break;
+		ImmutableSet<Card> lastPlayedCards = findLastPlayedCards(view);
 
 		Hand hand = view.getHand();
 		ImmutableSet<Card> cards = hand.getCards();
@@ -47,6 +36,23 @@ public class SingleCardPlayerStrategy implements PlayerStrategy {
 			return new ImmutableSet<Card>();
 		} else
 			return new ImmutableSet<Card>(); // Pass
+	}
+
+	/**
+	 * @return the last move by any player, excluding those who passed. If
+	 *         current player controls the game (i.e. he do not need to follow
+	 *         the previous move), lastPlayedCards would be null.
+	 */
+	private ImmutableSet<Card> findLastPlayedCards(PlayerView view) {
+		ImmutableSet<Card> lastPlayedCards = null;
+
+		for (GameMove move : view.getPlayedMoves())
+			if (!move.getPlayedCards().isEmpty()) {
+				lastPlayedCards = move.getPlayedCards();
+				break;
+			} else if (move.getPlayer() == view.currentPlayerNum())
+				break;
+		return lastPlayedCards;
 	}
 
 }

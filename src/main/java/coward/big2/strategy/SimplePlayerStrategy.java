@@ -5,6 +5,11 @@ import coward.big2.PlayerView;
 import coward.big2.card.Card;
 import coward.immutable.ImmutableSet;
 
+/**
+ * Plays whatever card the player have on hand.
+ * 
+ * For testing only, not a valid strategy in real play.
+ */
 public class SimplePlayerStrategy implements PlayerStrategy {
 
 	@Override
