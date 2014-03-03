@@ -56,8 +56,12 @@ public class GameState {
 	public int getNextPlayer(int player) {
 		return (player + 1) % hands.length;
 	}
-	
+
 	public int getPreviousPlayer(int player) {
-		return (player - 1) % hands.length;
+		int previousPlayer = player - 1;
+		if (previousPlayer < 0)
+			previousPlayer += hands.length;
+		return previousPlayer;
 	}
+
 }
