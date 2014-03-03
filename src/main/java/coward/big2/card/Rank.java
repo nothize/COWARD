@@ -1,4 +1,4 @@
-package coward.big2;
+package coward.big2.card;
 
 import java.util.Comparator;
 

@@ -3,6 +3,7 @@ package coward.big2;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import coward.big2.card.Card;
 import coward.immutable.ImmutableList;
 import coward.immutable.ImmutableSet;
 

@@ -1,5 +1,6 @@
 package coward.big2;
 
+import coward.big2.card.Card;
 import coward.immutable.ImmutableSet;
 
 public class GameMove {
