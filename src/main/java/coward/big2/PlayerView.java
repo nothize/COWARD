@@ -18,7 +18,7 @@ public interface PlayerView {
 	/**
 	 * @return history of previously played cards.
 	 */
-	public ImmutableList<GameMove> getPlayedCards();
+	public ImmutableList<GameMove> getPlayedMoves();
 
 	/**
 	 * @return the player's own hand.

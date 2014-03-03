@@ -18,7 +18,7 @@ public class SimplePlayerView implements PlayerView {
 	}
 
 	@Override
-	public ImmutableList<GameMove> getPlayedCards() {
+	public ImmutableList<GameMove> getPlayedMoves() {
 		return gameState.getPlayedMoves();
 	}
 
