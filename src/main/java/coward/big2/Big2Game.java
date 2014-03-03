@@ -3,6 +3,8 @@ package coward.big2;
 import java.util.ArrayList;
 import java.util.List;
 
+import coward.big2.strategy.PlayerStrategy;
+import coward.big2.strategy.SimplePlayerStrategy;
 import coward.big2.ui.SilentUserInterface;
 import coward.big2.ui.UserInterface;
 

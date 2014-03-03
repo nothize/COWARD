@@ -12,6 +12,8 @@ import org.junit.Test;
 
 import com.google.common.collect.Iterators;
 
+import coward.big2.strategy.PlayerStrategy;
+import coward.big2.strategy.SimplePlayerStrategy;
 import coward.immutable.ImmutableSet;
 
 public class ControllerTest {

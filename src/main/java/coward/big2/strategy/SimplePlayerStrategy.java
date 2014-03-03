@@ -1,5 +1,8 @@
-package coward.big2;
+package coward.big2.strategy;
 
+import coward.big2.Card;
+import coward.big2.Hand;
+import coward.big2.PlayerView;
 import coward.immutable.ImmutableSet;
 
 public class SimplePlayerStrategy implements PlayerStrategy {
