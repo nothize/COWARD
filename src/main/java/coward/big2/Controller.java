@@ -68,7 +68,7 @@ public class Controller {
 
 		ImmutableList<ImmutableSet<Card>> playedCards1 = ImmutableList.cons(cards, gameState.getPlayedCards());
 
-		return new GameState(hands1, playedCards1);
+		return new GameState(hands1, playedCards1, gameState);
 	}
 
 	/**

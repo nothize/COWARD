@@ -10,10 +10,16 @@ public class GameState {
 
 	private Hand[] hands;
 	private ImmutableList<ImmutableSet<Card>> playedCards = ImmutableList.empty();
+	private GameState previous;
 
 	public GameState(Hand[] hands, ImmutableList<ImmutableSet<Card>> playedCards) {
+		this(hands, playedCards, null);
+	}
+
+	public GameState(Hand[] hands, ImmutableList<ImmutableSet<Card>> playedCards, GameState previous) {
 		this.hands = hands;
 		this.playedCards = playedCards;
+		this.previous = previous;
 	}
 
 	public Hand[] getHands() {
@@ -22,6 +28,10 @@ public class GameState {
 
 	public ImmutableList<ImmutableSet<Card>> getPlayedCards() {
 		return playedCards;
+	}
+
+	public GameState getPrevious() {
+		return previous;
 	}
 
 	@Override
