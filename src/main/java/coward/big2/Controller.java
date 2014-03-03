@@ -9,6 +9,29 @@ import coward.immutable.ImmutableSet;
 
 public class Controller {
 
+	private List<PlayerStrategy> playerStrategies;
+
+	public Controller(List<PlayerStrategy> playerStrategies) {
+		this.playerStrategies = playerStrategies;
+	}
+
+	public GameState runGame(GameState pgs) {
+		GameState gs = shuffle();
+		return startGame(gs, findFirstPlayer(gs, pgs));
+	}
+
+	public GameState startGame( GameState gs, int player) {
+		do {
+			// Finds the current player, shows him the table view, let him play his cards
+			PlayerStrategy currentPlayerStrategy = playerStrategies.get(player);
+			SimplePlayerView currentPlayerView = new SimplePlayerView(gs, player);
+			gs = playCards(gs, player, currentPlayerStrategy.play(currentPlayerView));
+			player = gs.getNextPlayer(player);
+		} while (!endGame(gs));
+		player = gs.getPreviousPlayer(player);
+		return gs;
+	}
+
 	public GameState shuffle() {
 		List<Card> cards = new ArrayList<>(Card.allCards());
 		Random random = new Random();

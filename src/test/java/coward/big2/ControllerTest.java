@@ -2,7 +2,9 @@ package coward.big2;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import org.junit.Before;
@@ -15,13 +17,25 @@ import coward.immutable.ImmutableSet;
 public class ControllerTest {
 
 	private Random random = new Random();
-	private Controller controller = new Controller();
+	private Controller controller;
 
 	@Before
 	public void init() {
-		controller = new Controller();
+		List<PlayerStrategy> playerStrategies = new ArrayList<>();
+
+		for (int player = 0; player < Big2Constants.nPlayers; player++)
+			playerStrategies.add(new SimplePlayerStrategy());
+
+		controller = new Controller(playerStrategies);
 	}
-	
+
+	@Test
+	public void testGetPreviousPlayer() {
+		GameState gs = controller.shuffle();
+		assertEquals(0, gs.getPreviousPlayer(1));
+		assertEquals(gs.getHands().length - 1, gs.getPreviousPlayer(0));
+	}
+
 	@Test
 	public void testShuffle() {
 		GameState gameState = controller.shuffle();
@@ -29,6 +43,36 @@ public class ControllerTest {
 
 		for (Hand hand : gameState.getHands())
 			assertEquals(13, hand.getCards().size());
+	}
+
+
+	@Test
+	public void testStartGame() {
+		GameState pgs = null;
+		GameState gs = controller.shuffle();
+		
+		int player = 0;
+		pgs = controller.startGame(gs, player);
+		
+		boolean b = false;
+		Hand[] hands = pgs.getHands();
+		for (int i = 0; i < hands.length; i++) {
+			if ( hands[i].getCards().size() == 0 ) {
+				assertEquals(player, i);
+				b = true;
+			}
+		}
+		assertTrue(b);
+		b = false;
+		pgs = controller.runGame(pgs);
+		hands = pgs.getHands();
+		for (int i = 0; i < hands.length; i++) {
+			if ( hands[i].getCards().size() == 0 ) {
+				assertEquals(player, i);
+				b = true;
+			}
+		}
+		assertTrue(b);
 	}
 
 	@Test
