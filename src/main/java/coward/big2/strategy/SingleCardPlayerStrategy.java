@@ -15,7 +15,6 @@ public class SingleCardPlayerStrategy implements PlayerStrategy {
 
 	@Override
 	public ImmutableSet<Card> play(PlayerView view) {
-
 		ImmutableSet<Card> lastPlayedCards = findLastPlayedCards(view);
 
 		Hand hand = view.getHand();
