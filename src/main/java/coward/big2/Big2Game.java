@@ -1,6 +1,11 @@
 package coward.big2;
 
+import coward.big2.ui.SilentUserInterface;
+import coward.big2.ui.UserInterface;
+
 public class Big2Game {
+	private UserInterface userInterface = new SilentUserInterface();
+
 	public static void main(String[] args) {
 		Big2Game game = new Big2Game();
 		
@@ -12,7 +17,7 @@ public class Big2Game {
 		GameState pgs = null;
 		do {
 			pgs = runGame(c, pgs);
-		} while ( c.playAgain() );
+		} while ( userInterface.playAgain() );
 	}
 
 	public GameState runGame(Controller c, GameState pgs) {

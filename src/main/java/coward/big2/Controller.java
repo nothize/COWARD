@@ -85,9 +85,4 @@ public class Controller {
 		return false;
 	}
 
-	// TODO Determine if the player want to play another game
-	public boolean playAgain() {
-		return false;
-	}
-
 }
