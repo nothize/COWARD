@@ -1,7 +1,6 @@
 package coward.big2;
 
 import coward.immutable.ImmutableList;
-import coward.immutable.ImmutableSet;
 
 
 public class SimplePlayerView implements PlayerView {
@@ -19,8 +18,8 @@ public class SimplePlayerView implements PlayerView {
 	}
 
 	@Override
-	public ImmutableList<ImmutableSet<Card>> getPlayedCards() {
-		return gameState.getPlayedCards();
+	public ImmutableList<GameMove> getPlayedCards() {
+		return gameState.getPlayedMoves();
 	}
 
 	@Override

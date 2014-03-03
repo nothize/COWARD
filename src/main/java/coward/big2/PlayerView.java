@@ -1,7 +1,6 @@
 package coward.big2;
 
 import coward.immutable.ImmutableList;
-import coward.immutable.ImmutableSet;
 
 /**
  * What a player sees when he is the current player.
@@ -17,9 +16,9 @@ public interface PlayerView {
 	public int currentPlayerNum();
 
 	/**
-	 * @return history of previously played cards, starting from player 0.
+	 * @return history of previously played cards.
 	 */
-	public ImmutableList<ImmutableSet<Card>> getPlayedCards();
+	public ImmutableList<GameMove> getPlayedCards();
 
 	/**
 	 * @return the player's own hand.

@@ -9,16 +9,16 @@ import coward.immutable.ImmutableSet;
 public class GameState {
 
 	private Hand[] hands;
-	private ImmutableList<ImmutableSet<Card>> playedCards = ImmutableList.empty();
+	private ImmutableList<GameMove> playedMoves = ImmutableList.empty();
 	private GameState previous;
 
-	public GameState(Hand[] hands, ImmutableList<ImmutableSet<Card>> playedCards) {
-		this(hands, playedCards, null);
+	public GameState(Hand[] hands, ImmutableList<GameMove> playedMoves) {
+		this(hands, playedMoves, null);
 	}
 
-	public GameState(Hand[] hands, ImmutableList<ImmutableSet<Card>> playedCards, GameState previous) {
+	public GameState(Hand[] hands, ImmutableList<GameMove> playedMoves, GameState previous) {
 		this.hands = hands;
-		this.playedCards = playedCards;
+		this.playedMoves = playedMoves;
 		this.previous = previous;
 	}
 
@@ -26,8 +26,8 @@ public class GameState {
 		return hands;
 	}
 
-	public ImmutableList<ImmutableSet<Card>> getPlayedCards() {
-		return playedCards;
+	public ImmutableList<GameMove> getPlayedMoves() {
+		return playedMoves;
 	}
 
 	public GameState getPrevious() {
@@ -50,9 +50,9 @@ public class GameState {
 		sb.append("[HISTORY]\n");
 
 		Deque<ImmutableSet<Card>> deque = new ArrayDeque<>();
-		for (ImmutableSet<Card> cards : playedCards)
+		for (GameMove gameMove : playedMoves)
 			// reverse order
-			deque.addFirst(cards);
+			deque.addFirst(gameMove.getPlayedCards());
 
 		for (ImmutableSet<Card> cards : deque) {
 			for (Card card : cards)

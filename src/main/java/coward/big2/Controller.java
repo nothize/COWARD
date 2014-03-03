@@ -25,7 +25,8 @@ public class Controller {
 			// Finds the current player, shows him the table view, let him play his cards
 			PlayerStrategy currentPlayerStrategy = playerStrategies.get(player);
 			SimplePlayerView currentPlayerView = new SimplePlayerView(gs, player);
-			gs = playCards(gs, player, currentPlayerStrategy.play(currentPlayerView));
+			ImmutableSet<Card> playCards = currentPlayerStrategy.play(currentPlayerView);
+			gs = playCards(gs, new GameMove(player, playCards));
 			player = gs.getNextPlayer(player);
 		} while (!endGame(gs));
 		player = gs.getPreviousPlayer(player);
@@ -53,10 +54,13 @@ public class Controller {
 			start = end;
 		}
 
-		return new GameState(hands, ImmutableList.<ImmutableSet<Card>> empty());
+		return new GameState(hands, ImmutableList.<GameMove> empty());
 	}
 
-	public GameState playCards(GameState gameState, int player, ImmutableSet<Card> cards) {
+	public GameState playCards(GameState gameState, GameMove move) {
+		int player = move.getPlayer();
+		ImmutableSet<Card> cards = move.getPlayedCards();
+
 		Hand[] hands = gameState.getHands();
 		Hand[] hands1 = new Hand[hands.length];
 
@@ -66,9 +70,9 @@ public class Controller {
 			else
 				hands1[i] = hands[i];
 
-		ImmutableList<ImmutableSet<Card>> playedCards1 = ImmutableList.cons(cards, gameState.getPlayedCards());
+		ImmutableList<GameMove> playedMoves1 = ImmutableList.cons(move, gameState.getPlayedMoves());
 
-		return new GameState(hands1, playedCards1, gameState);
+		return new GameState(hands1, playedMoves1, gameState);
 	}
 
 	/**

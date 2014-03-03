@@ -84,12 +84,12 @@ public class ControllerTest {
 				Card[] cards = Iterators.toArray(gameState.getHands()[player].getCards().iterator(), Card.class);
 				Card card = cards[random.nextInt(cards.length)];
 
-				gameState = controller.playCards(gameState, player, new ImmutableSet<>(Arrays.asList(card)));
+				gameState = controller.playCards(gameState, new GameMove(player, new ImmutableSet<>(Arrays.asList(card))));
 			}
 
 		for (int player = 0; player < Big2Constants.nPlayers; player++)
 			assertEquals(13 - 10, gameState.getHands()[player].getCards().size());
-		assertEquals(10 * Big2Constants.nPlayers, gameState.getPlayedCards().size());
+		assertEquals(10 * Big2Constants.nPlayers, gameState.getPlayedMoves().size());
 
 		System.out.println(gameState.toString());
 	}
