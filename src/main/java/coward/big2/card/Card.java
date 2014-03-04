@@ -36,8 +36,8 @@ public class Card implements Comparable<Card> {
 	@Override
 	public int compareTo(Card card) {
 		int c = 0;
-		c = c == 0 ? -(suit.ordinal() - card.suit.ordinal()) : c;
 		c = c == 0 ? Rank.big2Comparator.compare(rank, card.rank) : c;
+		c = c == 0 ? -(suit.ordinal() - card.suit.ordinal()) : c;
 		return c;
 	}
 
