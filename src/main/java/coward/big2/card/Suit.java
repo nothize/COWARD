@@ -4,8 +4,8 @@ public enum Suit {
 
 	SPADE__, //
 	HEART__, //
-	DIAMOND, //
 	CLUB___, //
+	DIAMOND, //
 	;
 
 }
