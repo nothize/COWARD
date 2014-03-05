@@ -1,9 +1,9 @@
 package coward.big2;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -87,7 +87,7 @@ public class ControllerTest {
 				Card[] cards = Iterators.toArray(gameState.getHands()[player].getCards().iterator(), Card.class);
 				Card card = cards[random.nextInt(cards.length)];
 
-				gameState = controller.playCards(gameState, new GameMove(player, new ImmutableSet<>(Arrays.asList(card))));
+				gameState = controller.playCards(gameState, new GameMove(player, ImmutableSet.asSet(card)));
 			}
 
 		for (int player = 0; player < Big2Constants.nPlayers; player++)

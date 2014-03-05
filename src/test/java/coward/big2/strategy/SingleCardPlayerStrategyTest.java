@@ -2,8 +2,6 @@ package coward.big2.strategy;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-
 import org.junit.Test;
 
 import coward.big2.GameMove;
@@ -25,7 +23,7 @@ public class SingleCardPlayerStrategyTest {
 		Card h10 = new Card(Suit.HEART__, Rank.N10__);
 		Card djack = new Card(Suit.DIAMOND, Rank.JACK_);
 		Hand[] hands = new Hand[] {
-			new Hand(new ImmutableSet<Card>().add(djack).add(d9).add(h10)),
+			new Hand(ImmutableSet.asSet(djack, d9, h10)),
 		};
 
 		GameState gameState;
@@ -36,8 +34,7 @@ public class SingleCardPlayerStrategyTest {
 
 		// Test if last played card < card_n, play card_n
 		gameState = new GameState(hands,
-				ImmutableList.asList(new GameMove(0, new ImmutableSet<>(Arrays
-						.asList(c10)))));
+				ImmutableList.asList(new GameMove(0, ImmutableSet.asSet(c10))));
 		cards = singleCardPlayerStrategy.play(new SimplePlayerView(gameState, currentPlayer));
 		assertEquals(h10, cards.iterator().next());
 
@@ -49,15 +46,13 @@ public class SingleCardPlayerStrategyTest {
 
 		// Test if card_n < last played card for all n, pass
 		gameState = new GameState(hands,
-				ImmutableList.asList(new GameMove(0, new ImmutableSet<>(Arrays
-						.asList(ca)))));
+				ImmutableList.asList(new GameMove(0, ImmutableSet.asSet(ca))));
 		cards = singleCardPlayerStrategy.play(new SimplePlayerView(gameState, currentPlayer));
 		assertEquals(true, cards.isEmpty());
 
 		// Test if card_n < last played card < card_n+1 , play card_n+1 
 		gameState = new GameState(hands,
-				ImmutableList.asList(new GameMove(0, new ImmutableSet<>(Arrays
-						.asList(s10)))));
+				ImmutableList.asList(new GameMove(0, ImmutableSet.asSet(s10))));
 		cards = singleCardPlayerStrategy.play(new SimplePlayerView(gameState, currentPlayer));
 		assertEquals(djack, cards.iterator().next());
 	}

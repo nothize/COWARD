@@ -64,6 +64,14 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 		this.comparator = comparator;
 	}
 
+	@SafeVarargs
+	public static <T extends Comparable<? super T>> ImmutableSet<T> asSet(T... array) {
+		ImmutableSet<T> set = new ImmutableSet<>();
+		for (T t : array)
+			set = set.add(t);
+		return set;
+	}
+
 	public Iterator<T> iterator() {
 		return iterator(null, null);
 	}
