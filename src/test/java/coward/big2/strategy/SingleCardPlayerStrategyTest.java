@@ -9,8 +9,6 @@ import coward.big2.GameState;
 import coward.big2.Hand;
 import coward.big2.SimplePlayerView;
 import coward.big2.card.Card;
-import coward.big2.card.Rank;
-import coward.big2.card.Suit;
 import coward.immutable.ImmutableList;
 import coward.immutable.ImmutableSet;
 
@@ -19,18 +17,18 @@ public class SingleCardPlayerStrategyTest {
 	public void testPlay() {
 		SingleCardPlayerStrategy singleCardPlayerStrategy = new SingleCardPlayerStrategy();
 		int currentPlayer = 0;
-		Card d9 = new Card(Suit.DIAMOND, Rank.N9___);
-		Card h10 = new Card(Suit.HEART__, Rank.N10__);
-		Card djack = new Card(Suit.DIAMOND, Rank.JACK_);
+		Card d9 = Card.D9;
+		Card h10 = Card.HT;
+		Card djack = Card.DJ;
 		Hand[] hands = new Hand[] {
 			new Hand(ImmutableSet.asSet(djack, d9, h10)),
 		};
 
 		GameState gameState;
 		ImmutableSet<Card> cards;
-		Card s10 = new Card(Suit.SPADE__, Rank.N10__);
-		Card c10 = new Card(Suit.CLUB___, Rank.N10__);
-		Card ca = new Card(Suit.CLUB___, Rank.ACE__);
+		Card s10 = Card.ST;
+		Card c10 = Card.CT;
+		Card ca = Card.CA;
 
 		// Test if last played card < card_n, play card_n
 		gameState = new GameState(hands,

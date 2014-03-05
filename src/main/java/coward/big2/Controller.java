@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import coward.big2.card.Card;
-import coward.big2.card.Rank;
-import coward.big2.card.Suit;
 import coward.big2.strategy.PlayerStrategy;
 import coward.immutable.ImmutableList;
 import coward.immutable.ImmutableSet;
@@ -98,7 +96,7 @@ public class Controller {
 		}
 		Hand[] hands = currentGameState.getHands();
 		for (int j = 0; j < hands.length; j++) {
-			if ( hands[j].getCards().find(new Card(Suit.DIAMOND, Rank.N3___)) != null ) {
+			if ( hands[j].getCards().find(Card.D3) != null ) {
 				return j;
 			}
 		}

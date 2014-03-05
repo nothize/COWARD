@@ -8,11 +8,11 @@ public class CardTest {
 
 	@Test
 	public void testCompareTo() {
-		Card d4 = new Card(Suit.DIAMOND, Rank.N4___);
-		Card s3 = new Card(Suit.SPADE__, Rank.N3___);
-		Card h3 = new Card(Suit.HEART__, Rank.N3___);
-		Card c3 = new Card(Suit.CLUB___, Rank.N3___);
-		Card d3 = new Card(Suit.DIAMOND, Rank.N3___);
+		Card d4 = Card.D4;
+		Card s3 = Card.S3;
+		Card h3 = Card.H3;
+		Card c3 = Card.C3;
+		Card d3 = Card.D3;
 
 		// Test rank comparison
 		assertTrue(d3.compareTo(d4) < 0);
