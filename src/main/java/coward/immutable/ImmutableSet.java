@@ -37,10 +37,9 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 		}
 	}
 
-	public ImmutableSet(Collection<T> col) {
+	public ImmutableSet(Iterable<T> col) {
 		this();
-		for (T t : col)
-			root = createRootNode(add(root, t, false));
+		root = addAll0(col);
 	}
 
 	public ImmutableSet() {
@@ -170,6 +169,17 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 
 	public ImmutableSet<T> add(T t) {
 		return add(t, false);
+	}
+
+	public ImmutableSet<T> addAll(Iterable<T> col) {
+		return new ImmutableSet<>(comparator, addAll0(col));
+	}
+
+	private List<Slot> addAll0(Iterable<T> col) {
+		List<Slot> node = root;
+		for (T t : col)
+			node = createRootNode(add(node, t, false));
+		return node;
 	}
 
 	/**
