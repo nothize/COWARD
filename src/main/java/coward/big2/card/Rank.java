@@ -25,14 +25,7 @@ public enum Rank {
 		}
 
 		private int order(Rank rank) {
-			switch (rank) {
-			case N2___:
-				return 15;
-			case ACE__:
-				return 14;
-			default:
-				return rank.value;
-			}
+			return rank.getValue();
 		}
 	};
 
@@ -49,4 +42,14 @@ public enum Rank {
 		return "" + display;
 	}
 
+	public int getValue() {
+		switch (this) {
+		case N2___:
+			return 15;
+		case ACE__:
+			return 14;
+		default:
+			return value;
+		}
+	}
 }

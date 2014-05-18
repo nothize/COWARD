@@ -114,4 +114,16 @@ public class MoveGeneratorTest {
 		
 		assertEquals(8, results.size());
 	}
+	
+	@Test
+	public void testStraight() throws Exception {
+		Hand hand = new Hand(ImmutableSet.asSet(
+				Card.C7, Card.H8,
+				Card.C3, Card.D4, Card.H4, Card.S5, Card.H6
+		));
+		ImmutableSet<Card> cards = hand.getCards();
+		List<ImmutableSet<Card>> rankedCards = moveGenerator.groupSameRanks(cards);
+		List<ImmutableSet<Card>> results = new ArrayList<>();
+		moveGenerator.generateStraight(cards, rankedCards, results);
+	}
 }
