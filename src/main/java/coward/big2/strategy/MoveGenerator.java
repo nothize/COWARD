@@ -31,8 +31,28 @@ public class MoveGenerator {
 
 		generateSameRank(rankedCards, results);
 		generateFullHouse(rankedCards, results);
+		generateFourOne(hand.getCards(), rankedCards, results);
 
 		return results;
+	}
+
+	public void generateFourOne(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards,
+			List<ImmutableSet<Card>> results) {
+		// Find ranks with at least 4 pairs
+		List<ImmutableSet<Card>> fourss = new ArrayList<>();
+		for (ImmutableSet<Card> cards : rankedCards) {
+			if ( cards.size() >= 4 ) {
+				fourss.add(cards);
+			}
+		}
+		// 4 join 1
+		for (ImmutableSet<Card> cards4 : fourss) {
+			for (Card card : allCards) {
+				if ( cards4.iterator().next().getRank() != card.getRank() ) {
+					results.add(cards4.add(card));
+				}
+			}
+		}
 	}
 
 	public void generateFullHouse(List<ImmutableSet<Card>> rankedCards,
@@ -68,12 +88,17 @@ public class MoveGenerator {
 			// For each three, join with all two
 			for (ImmutableSet<Card> cards3 : threes) {
 				for (ImmutableSet<Card> cards2 : twos) {
-					if ( cards3.iterator().next().getRank() != cards2.iterator().next().getRank() ) {
+					if ( !sameRank(cards3, cards2) ) {
 						results.add(cards3.addAll(cards2));
 					}
 				}
 			}
 		}
+	}
+
+	private boolean sameRank(ImmutableSet<Card> cards3,
+			ImmutableSet<Card> cards2) {
+		return cards3.iterator().next().getRank() == cards2.iterator().next().getRank();
 	}
 
 	private void generateSameRank(List<ImmutableSet<Card>> rankedCards,

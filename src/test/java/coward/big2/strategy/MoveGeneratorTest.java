@@ -91,4 +91,33 @@ public class MoveGeneratorTest {
 		
 		assertEquals(6, results.size());
 	}
+	
+	@Test
+	public void testFourOne() throws Exception {
+		Hand hand = new Hand(ImmutableSet.asSet(
+				Card.CA, Card.DA, Card.SA, Card.HA
+				, Card.C2, Card.H2
+		));
+		ImmutableSet<Card> cards = hand.getCards();
+		List<ImmutableSet<Card>> rankedCards = moveGenerator.groupSameRanks(cards);
+		List<ImmutableSet<Card>> results = new ArrayList<>();
+
+		moveGenerator.generateFourOne(cards, rankedCards, results);
+		log.debug("result: " + results);
+		
+		assertEquals(2, results.size());
+
+		hand = new Hand(ImmutableSet.asSet(
+				Card.SA, Card.HA, Card.CA, Card.DA
+				, Card.S2, Card.H2, Card.C2, Card.D2
+		));
+		cards = hand.getCards();
+		rankedCards = moveGenerator.groupSameRanks(cards);
+		results = new ArrayList<>();
+
+		moveGenerator.generateFourOne(cards, rankedCards, results);
+		log.debug("result: " + results);
+		
+		assertEquals(8, results.size());
+	}
 }
