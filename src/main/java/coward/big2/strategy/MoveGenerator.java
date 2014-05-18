@@ -38,59 +38,47 @@ public class MoveGenerator {
 
 	public void generateFourOne(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards,
 			List<ImmutableSet<Card>> results) {
-		// Find ranks with at least 4 pairs
-		List<ImmutableSet<Card>> fourss = new ArrayList<>();
-		for (ImmutableSet<Card> cards : rankedCards) {
-			if ( cards.size() >= 4 ) {
-				fourss.add(cards);
-			}
-		}
-		// 4 join 1
-		for (ImmutableSet<Card> cards4 : fourss) {
-			for (Card card : allCards) {
-				if ( cards4.iterator().next().getRank() != card.getRank() ) {
-					results.add(cards4.add(card));
-				}
-			}
-		}
+		generateMn(1, 4, rankedCards, results);
 	}
 
 	public void generateFullHouse(List<ImmutableSet<Card>> rankedCards,
 			List<ImmutableSet<Card>> results) {
+		generateMn(2, 3, rankedCards, results);
+	}
+
+	private void generateMn(int m, int n, List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
 		// Find ranks with at least 3 pairs and 2 pairs
-		List<ImmutableSet<Card>> threess = new ArrayList<>();
-		List<ImmutableSet<Card>> twoss = new ArrayList<>();
+		List<ImmutableSet<Card>> nss = new ArrayList<>();
+		List<ImmutableSet<Card>> mss = new ArrayList<>();
 		for (ImmutableSet<Card> cards : rankedCards) {
-			if ( cards.size() >= 2 ) {
-				twoss.add(cards);
-				if ( cards.size() >= 3 ) {
-					threess.add(cards);
-				}
+			if ( cards.size() >= m ) {
+				mss.add(cards);
+			}
+			if ( cards.size() >= n ) {
+				nss.add(cards);
 			}
 		}
-		log.debug("Threess: " + threess);
-		log.debug("Twoss:" + twoss);
+		log.debug("Threess: " + nss);
+		log.debug("Twoss:" + mss);
 		
 		// The minimum set of full house must contains minimum 3 pairs and 2 pairs thus total 1 threes and 2 twos.
-		if ( threess.size() >= 1 && twoss.size() >= 2 ) {
-			List<ImmutableSet<Card>> threes = new ArrayList<>();
-			// Generate the permutation set of all threes
-			for (ImmutableSet<Card> cards : threess) {
-				permute(cards, 3, threes);
-			}
-			log.debug("threes: " + threes);
-			List<ImmutableSet<Card>> twos = new ArrayList<>();
-			// Generate the permutation set of all twos
-			for (ImmutableSet<Card> cards : twoss) {
-				permute(cards, 2, twos);
-			}
-			log.debug("twos: " + twos);
-			// For each three, join with all two
-			for (ImmutableSet<Card> cards3 : threes) {
-				for (ImmutableSet<Card> cards2 : twos) {
-					if ( !sameRank(cards3, cards2) ) {
-						results.add(cards3.addAll(cards2));
-					}
+		List<ImmutableSet<Card>> ms = new ArrayList<>();
+		List<ImmutableSet<Card>> ns = new ArrayList<>();
+		// Generate the permutation set of all twos
+		for (ImmutableSet<Card> cards : mss) {
+			permute(cards, m, ms);
+		}
+		// Generate the permutation set of all threes
+		for (ImmutableSet<Card> cards : nss) {
+			permute(cards, n, ns);
+		}
+		log.debug("threes: " + ns);
+		log.debug("twos: " + ms);
+		// For each three, join with all two
+		for (ImmutableSet<Card> ncards : ns) {
+			for (ImmutableSet<Card> mcards : ms) {
+				if ( !sameRank(ncards, mcards) ) {
+					results.add(ncards.addAll(mcards));
 				}
 			}
 		}
