@@ -322,8 +322,9 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		dump(sb, root, "");
-		return sb.toString();
+//		dump(sb, root, "");
+//		return sb.toString();
+		return join("");
 	}
 
 	@Override
@@ -388,5 +389,22 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 				sb.append(indent + (slot.pivot != null ? slot.pivot : "<infinity>") + "\n");
 			}
 	}
-
+	
+	public String join(String sep) {
+		StringBuilder sb = new StringBuilder();
+		join(sb, root, sep);
+		return sb.toString();
+	}
+	
+	private void join(StringBuilder sb, List<Slot> node, String sep) {
+		if (node != null)
+			for (Slot slot : node) {
+				if ( slot.slots == null ) {
+					sb.append((slot.pivot != null ? slot.pivot : "") + sep);
+				} else {
+					join(sb, slot.slots, sep);
+				}
+			}
+	}
+	
 }
