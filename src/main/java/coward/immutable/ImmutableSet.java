@@ -10,6 +10,8 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.google.common.collect.Iterators;
 
@@ -396,4 +398,11 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 			}
 	}
 	
+	public Set<T> toOrderedSet() {
+		Set<T> set = new TreeSet<>(comparator);
+		for (T t : this) {
+			set.add(t);
+		}
+		return set;
+	}
 }
