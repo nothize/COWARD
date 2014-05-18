@@ -3,9 +3,7 @@ package coward.big2.strategy;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,12 +55,8 @@ public class MoveGeneratorTest {
 		ImmutableSet<Card> cards = results.get(0);
 		assertEquals(3, cards.size());
 		log.debug(cards);
-		Set<Card> cardSet = new HashSet<>();
-		for (Card card : cards) {
-			cardSet.add(card);
-		}
-		assertEquals(com.google.common.collect.ImmutableSet.of(Card.SA, Card.HA, Card.CA)
-				, cardSet);
+		assertEquals(ImmutableSet.asSet(Card.SA, Card.HA, Card.CA)
+				, cards);
 	}
 	
 	@Test
