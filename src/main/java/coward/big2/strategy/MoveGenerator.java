@@ -1,6 +1,7 @@
 package coward.big2.strategy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -151,7 +152,7 @@ public class MoveGenerator {
 					results.add(cards.add(card));
 			return results;
 		} else
-			return new ArrayList<>();
+			return Arrays.asList(new ImmutableSet<>());
 	}
 
 	/**
