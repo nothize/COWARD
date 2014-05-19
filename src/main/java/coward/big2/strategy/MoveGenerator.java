@@ -61,7 +61,7 @@ public class MoveGenerator {
 
 	private void generateOneStraight(List<ImmutableSet<Card>> subList,
 			List<ImmutableSet<Card>> results) {
-		results.addAll(permute(subList));
+		results.addAll(combos(subList));
 	}
 
 	public void generateFourOne(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards,
@@ -94,11 +94,11 @@ public class MoveGenerator {
 		List<ImmutableSet<Card>> ns = new ArrayList<>();
 		// Generate the permutation set of all twos
 		for (ImmutableSet<Card> cards : mss) {
-			permute(cards, m, ms);
+			combos(cards, m, ms);
 		}
 		// Generate the permutation set of all threes
 		for (ImmutableSet<Card> cards : nss) {
-			permute(cards, n, ns);
+			combos(cards, n, ns);
 		}
 		log.debug("threes: " + ns);
 		log.debug("twos: " + ms);
@@ -126,7 +126,7 @@ public class MoveGenerator {
 		// Generate singles/pairs/triples/quadruples
 		for (ImmutableSet<Card> cards : rankedCards)
 			for (int i = 1; i <= cards.size(); i++)
-				permute(cards, i, results);
+				combos(cards, i, results);
 	}
 
 	List<ImmutableSet<Card>> groupSameRanks(ImmutableSet<Card> cards) {
@@ -141,13 +141,13 @@ public class MoveGenerator {
 		return results;
 	}
 
-	private List<ImmutableSet<Card>> permute(List<ImmutableSet<Card>> cardsList) {
+	private List<ImmutableSet<Card>> combos(List<ImmutableSet<Card>> cardsList) {
 		if (!cardsList.isEmpty()) {
 			ImmutableSet<Card> head = cardsList.get(0);
 			List<ImmutableSet<Card>> tail = cardsList.subList(1, cardsList.size());
 
 			List<ImmutableSet<Card>> results = new ArrayList<>();
-			for (ImmutableSet<Card> cards : permute(tail))
+			for (ImmutableSet<Card> cards : combos(tail))
 				for (Card card : head)
 					results.add(cards.add(card));
 			return results;
@@ -159,20 +159,20 @@ public class MoveGenerator {
 	 * Pick combinations of 'size' cards from first parameter, and add into
 	 * results parameter.
 	 */
-	void permute(ImmutableSet<Card> cards, int size, List<ImmutableSet<Card>> results) {
+	void combos(ImmutableSet<Card> cards, int size, List<ImmutableSet<Card>> results) {
 		int diff = cards.size() - size;
 		if (diff >= 0)
-			permute(cards, diff, empty, results);
+			combos(cards, diff, empty, results);
 	}
 
-	private void permute(ImmutableSet<Card> cards, int diff, ImmutableSet<Card> cards0, List<ImmutableSet<Card>> results) {
+	private void combos(ImmutableSet<Card> cards, int diff, ImmutableSet<Card> cards0, List<ImmutableSet<Card>> results) {
 		Iterator<Card> iter = cards.iterator();
 		if (diff > 0) {
 			if (iter.hasNext()) {
 				Card first = iter.next();
 				ImmutableSet<Card> remainingCards = cards.remove(first);
-				permute(remainingCards, diff - 1, cards0, results);
-				permute(remainingCards, diff, cards0.add(first), results);
+				combos(remainingCards, diff - 1, cards0, results);
+				combos(remainingCards, diff, cards0.add(first), results);
 			}
 		} else
 			results.add(cards.addAll(cards0));

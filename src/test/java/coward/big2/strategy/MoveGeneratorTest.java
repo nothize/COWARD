@@ -49,7 +49,7 @@ public class MoveGeneratorTest {
 	@Test
 	public void testPermute3() throws Exception {
 		List<ImmutableSet<Card>> results = new ArrayList<>();
-		moveGenerator.permute(ImmutableSet.asSet(Card.SA, Card.HA, Card.CA), 
+		moveGenerator.combos(ImmutableSet.asSet(Card.SA, Card.HA, Card.CA), 
 				3, results);
 		assertEquals(1, results.size());
 		ImmutableSet<Card> cards = results.get(0);
