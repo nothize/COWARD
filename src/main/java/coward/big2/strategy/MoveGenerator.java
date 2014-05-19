@@ -60,6 +60,7 @@ public class MoveGenerator {
 
 	private void generateOneStraight(List<ImmutableSet<Card>> subList,
 			List<ImmutableSet<Card>> results) {
+		results.addAll(permute(subList));
 	}
 
 	public void generateFourOne(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards,
