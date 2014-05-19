@@ -127,7 +127,7 @@ public class MoveGenerator {
 				permute(cards, i, results);
 	}
 
-	List<ImmutableSet<Card>> groupSameRanks(ImmutableSet<Card> cards) {
+	private List<ImmutableSet<Card>> groupSameRanks(ImmutableSet<Card> cards) {
 		Multimap<Rank, Card> cardsByRank = ArrayListMultimap.create();
 
 		for (Card card : cards)
@@ -139,11 +139,25 @@ public class MoveGenerator {
 		return results;
 	}
 
+	private List<ImmutableSet<Card>> permute(List<ImmutableSet<Card>> cardsList) {
+		if (!cardsList.isEmpty()) {
+			ImmutableSet<Card> head = cardsList.get(0);
+			List<ImmutableSet<Card>> tail = cardsList.subList(1, cardsList.size());
+
+			List<ImmutableSet<Card>> results = new ArrayList<>();
+			for (ImmutableSet<Card> cards : permute(tail))
+				for (Card card : head)
+					results.add(cards.add(card));
+			return results;
+		} else
+			return new ArrayList<>();
+	}
+
 	/**
 	 * Pick combinations of 'size' cards from first parameter, and add into
 	 * results parameter.
 	 */
-	void permute(ImmutableSet<Card> cards, int size, List<ImmutableSet<Card>> results) {
+private	void permute(ImmutableSet<Card> cards, int size, List<ImmutableSet<Card>> results) {
 		int diff = cards.size() - size;
 		if (diff >= 0)
 			permute(cards, diff, empty, results);
