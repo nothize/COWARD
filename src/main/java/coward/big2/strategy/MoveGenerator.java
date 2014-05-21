@@ -19,7 +19,7 @@ import coward.immutable.ImmutableSet;
 /**
  * Generate all possible moves based on a hand.
  * 
- * TODO generate full-house (3-2), four of a kind (4-1), straight, flush, straight flush
+ * TODO generate flush, straight flush
  */
 public class MoveGenerator {
 	private static final Log log = LogFactory.getLog(MoveGenerator.class);
