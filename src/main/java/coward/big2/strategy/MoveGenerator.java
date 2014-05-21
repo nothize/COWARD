@@ -39,38 +39,34 @@ public class MoveGenerator {
 	}
 
 	/**
-	 * Straight is 5 continuous ranks. eg. 1,2,3,4,5     J,Q,K,A,2
+	 * Straight is 5 continuous ranks. eg. 1,2,3,4,5 J,Q,K,A,2
 	 * 
 	 * @param cards
 	 * @param results
-	 * @param results 
+	 * @param results
 	 */
-	public void generateStraight(ImmutableSet<Card> allCards,
-			List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
+	public void generateStraight(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
 		ImmutableSet<Card> first;
 		ImmutableSet<Card> last;
 		for (int i = 0; i + 4 < rankedCards.size(); i++) {
 			first = rankedCards.get(i);
-			last = rankedCards.get(i+4);
+			last = rankedCards.get(i + 4);
 			// Found
-			if ( getRank(first).getValue() + 4 == getRank(last).getValue() ) {
-				generateOneStraight(rankedCards.subList(i, i+5), results);
+			if (getRank(first).getValue() + 4 == getRank(last).getValue()) {
+				generateOneStraight(rankedCards.subList(i, i + 5), results);
 			}
 		}
 	}
 
-	private void generateOneStraight(List<ImmutableSet<Card>> subList,
-			List<ImmutableSet<Card>> results) {
+	private void generateOneStraight(List<ImmutableSet<Card>> subList, List<ImmutableSet<Card>> results) {
 		results.addAll(combos(subList));
 	}
 
-	public void generateFourOne(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards,
-			List<ImmutableSet<Card>> results) {
+	public void generateFourOne(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
 		generateMn(1, 4, rankedCards, results);
 	}
 
-	public void generateFullHouse(List<ImmutableSet<Card>> rankedCards,
-			List<ImmutableSet<Card>> results) {
+	public void generateFullHouse(List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
 		generateMn(2, 3, rankedCards, results);
 	}
 
@@ -79,17 +75,18 @@ public class MoveGenerator {
 		List<ImmutableSet<Card>> nss = new ArrayList<>();
 		List<ImmutableSet<Card>> mss = new ArrayList<>();
 		for (ImmutableSet<Card> cards : rankedCards) {
-			if ( cards.size() >= m ) {
+			if (cards.size() >= m) {
 				mss.add(cards);
 			}
-			if ( cards.size() >= n ) {
+			if (cards.size() >= n) {
 				nss.add(cards);
 			}
 		}
 		log.debug("Threess: " + nss);
 		log.debug("Twoss:" + mss);
-		
-		// The minimum set of full house must contains minimum 3 pairs and 2 pairs thus total 1 threes and 2 twos.
+
+		// The minimum set of full house must contains minimum 3 pairs and 2
+		// pairs thus total 1 threes and 2 twos.
 		List<ImmutableSet<Card>> ms = new ArrayList<>();
 		List<ImmutableSet<Card>> ns = new ArrayList<>();
 		// Generate the permutation set of all twos
@@ -105,15 +102,14 @@ public class MoveGenerator {
 		// For each three, join with all two
 		for (ImmutableSet<Card> ncards : ns) {
 			for (ImmutableSet<Card> mcards : ms) {
-				if ( !isSameRank(ncards, mcards) ) {
+				if (!isSameRank(ncards, mcards)) {
 					results.add(ncards.addAll(mcards));
 				}
 			}
 		}
 	}
 
-	private boolean isSameRank(ImmutableSet<Card> cards3,
-			ImmutableSet<Card> cards2) {
+	private boolean isSameRank(ImmutableSet<Card> cards3, ImmutableSet<Card> cards2) {
 		return getRank(cards3) == getRank(cards2);
 	}
 
@@ -121,8 +117,7 @@ public class MoveGenerator {
 		return cards.iterator().next().getRank();
 	}
 
-	private void generateSameRank(List<ImmutableSet<Card>> rankedCards,
-			List<ImmutableSet<Card>> results) {
+	private void generateSameRank(List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
 		// Generate singles/pairs/triples/quadruples
 		for (ImmutableSet<Card> cards : rankedCards)
 			for (int i = 1; i <= cards.size(); i++)
@@ -142,17 +137,17 @@ public class MoveGenerator {
 	}
 
 	private List<ImmutableSet<Card>> combos(List<ImmutableSet<Card>> cardsList) {
-		if (!cardsList.isEmpty()) {
-			ImmutableSet<Card> head = cardsList.get(0);
-			List<ImmutableSet<Card>> tail = cardsList.subList(1, cardsList.size());
+		List<ImmutableSet<Card>> results = Arrays.asList(new ImmutableSet<>());
 
-			List<ImmutableSet<Card>> results = new ArrayList<>();
-			for (ImmutableSet<Card> cards : combos(tail))
-				for (Card card : head)
-					results.add(cards.add(card));
-			return results;
-		} else
-			return Arrays.asList(new ImmutableSet<>());
+		for (ImmutableSet<Card> cards : cardsList) {
+			List<ImmutableSet<Card>> results1 = new ArrayList<>();
+			for (ImmutableSet<Card> result : results)
+				for (Card card : cards)
+					results1.add(result.add(card));
+			results = results1;
+		}
+
+		return results;
 	}
 
 	/**
