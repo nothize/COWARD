@@ -136,6 +136,10 @@ public class MoveGenerator {
 		return results;
 	}
 
+	/**
+	 * Given a list of cards (cards 1, cards 2, etc) return all combinations of
+	 * (any card in cards 1), (any card of cards 2) (etc).
+	 */
 	private List<ImmutableSet<Card>> combos(List<ImmutableSet<Card>> cardsList) {
 		List<ImmutableSet<Card>> results = Arrays.asList(new ImmutableSet<>());
 
