@@ -16,6 +16,7 @@ import com.google.common.collect.Multimap;
 import coward.big2.Hand;
 import coward.big2.card.Card;
 import coward.big2.card.Rank;
+import coward.big2.card.Suit;
 import coward.immutable.ImmutableSet;
 
 /**
@@ -36,8 +37,25 @@ public class MoveGenerator {
 		generateFullHouse(rankedCards, results);
 		generateFourOne(hand.getCards(), rankedCards, results);
 		generateStraight(hand.getCards(), rankedCards, results);
+		generateFlush(hand.getCards(), results);
 
 		return results;
+	}
+
+	/**
+	 * Five cards in same suit. eg. 1H,3H,7H,8H,9H
+	 * 
+	 * @param cards
+	 * @param results
+	 */
+	void generateFlush(ImmutableSet<Card> cards, List<ImmutableSet<Card>> results) {
+		List<ImmutableSet<Card>> suitedCards = groupSameSuits(cards);
+		for (ImmutableSet<Card> sameSuits : suitedCards) {
+			if ( sameSuits.size() >= 5 ) {
+				log.debug("Flush combo: " + sameSuits);
+				combos(sameSuits, 5, results);
+			}
+		}
 	}
 
 	/**
@@ -134,11 +152,25 @@ public class MoveGenerator {
 		for (Card card : cards)
 			cardsByRank.put(card.getRank(), card);
 
-		Set<Rank> sortedRanks = new TreeSet<>();
-		sortedRanks.addAll(cardsByRank.keySet());
+		Set<Rank> sorted = new TreeSet<>();
+		sorted.addAll(cardsByRank.keySet());
 		List<ImmutableSet<Card>> results = new ArrayList<>();
-		for (Rank rank : sortedRanks)
+		for (Rank rank : sorted)
 			results.add(new ImmutableSet<>(cardsByRank.get(rank)));
+		return results;
+	}
+
+	List<ImmutableSet<Card>> groupSameSuits(ImmutableSet<Card> cards) {
+		Multimap<Suit, Card> cardsBySuit = ArrayListMultimap.create();
+
+		for (Card card : cards)
+			cardsBySuit.put(card.getSuit(), card);
+
+		Set<Suit> sorted = new TreeSet<>();
+		sorted.addAll(cardsBySuit.keySet());
+		List<ImmutableSet<Card>> results = new ArrayList<>();
+		for (Suit suit : sorted)
+			results.add(new ImmutableSet<>(cardsBySuit.get(suit)));
 		return results;
 	}
 

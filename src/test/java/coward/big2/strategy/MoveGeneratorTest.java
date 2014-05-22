@@ -145,4 +145,33 @@ public class MoveGeneratorTest {
 		expected.add(set4);
 		assertEquals(expected, results);
 	}
+	
+	@Test
+	public void testFlush() throws Exception {
+		Hand hand = new Hand(ImmutableSet.asSet(
+				Card.H3, Card.D4, Card.H4, Card.H5, Card.H6, Card.H7, Card.H8
+		));
+		ImmutableSet<Card> cards = hand.getCards();
+		List<ImmutableSet<Card>> results = new ArrayList<>();
+		moveGenerator.generateFlush(cards, results);
+		log.debug("flush: " + results);
+		
+		List<ImmutableSet<Card>> expected = new ArrayList<>();
+		Card[][] sets = new Card[][] {
+			{Card.H4, Card.H5, Card.H6, Card.H7, Card.H8},
+			{Card.H3, Card.H5, Card.H6, Card.H7, Card.H8},
+			{Card.H3, Card.H4, Card.H6, Card.H7, Card.H8},
+			{Card.H3, Card.H4, Card.H5, Card.H7, Card.H8},
+			{Card.H3, Card.H4, Card.H5, Card.H6, Card.H8},
+			{Card.H3, Card.H4, Card.H5, Card.H6, Card.H7}
+		};
+		for (Card[] cards2 : sets) {
+			ImmutableSet<Card> set = new ImmutableSet<>();
+			for (Card card : cards2) {
+				set = set.add(card);
+			}
+			expected.add(set);
+		}
+		assertEquals(expected, results);
+	}
 }
