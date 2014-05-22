@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,11 +50,13 @@ public class MoveGenerator {
 	public void generateStraight(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
 		ImmutableSet<Card> first;
 		ImmutableSet<Card> last;
+		log.debug(rankedCards);
 		for (int i = 0; i + 4 < rankedCards.size(); i++) {
 			first = rankedCards.get(i);
 			last = rankedCards.get(i + 4);
 			// Found
 			if (getRank(first).getValue() + 4 == getRank(last).getValue()) {
+				log.debug("Found potential straight at " + first);
 				generateOneStraight(rankedCards.subList(i, i + 5), results);
 			}
 		}
@@ -130,8 +134,10 @@ public class MoveGenerator {
 		for (Card card : cards)
 			cardsByRank.put(card.getRank(), card);
 
+		Set<Rank> sortedRanks = new TreeSet<>();
+		sortedRanks.addAll(cardsByRank.keySet());
 		List<ImmutableSet<Card>> results = new ArrayList<>();
-		for (Rank rank : cardsByRank.keySet())
+		for (Rank rank : sortedRanks)
 			results.add(new ImmutableSet<>(cardsByRank.get(rank)));
 		return results;
 	}
