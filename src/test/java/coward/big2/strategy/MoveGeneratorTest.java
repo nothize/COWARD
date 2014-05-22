@@ -125,5 +125,24 @@ public class MoveGeneratorTest {
 		List<ImmutableSet<Card>> rankedCards = moveGenerator.groupSameRanks(cards);
 		List<ImmutableSet<Card>> results = new ArrayList<>();
 		moveGenerator.generateStraight(cards, rankedCards, results);
+		
+		ImmutableSet<Card> set1 = ImmutableSet.asSet(
+			Card.C3, Card.D4, Card.S5, Card.H6, Card.C7
+		);
+		ImmutableSet<Card> set2 = ImmutableSet.asSet(
+				Card.C3, Card.H4, Card.S5, Card.H6, Card.C7
+		);
+		ImmutableSet<Card> set3 = ImmutableSet.asSet(
+				Card.D4, Card.S5, Card.H6, Card.C7, Card.H8
+		);
+		ImmutableSet<Card> set4 = ImmutableSet.asSet(
+				Card.H4, Card.S5, Card.H6, Card.C7, Card.H8
+		);
+		List<ImmutableSet<Card>> expected = new ArrayList<>();
+		expected.add(set1);
+		expected.add(set2);
+		expected.add(set3);
+		expected.add(set4);
+		assertEquals(expected, results);
 	}
 }
