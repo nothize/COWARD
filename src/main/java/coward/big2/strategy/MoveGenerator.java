@@ -141,7 +141,7 @@ public class MoveGenerator {
 	 * (any card in cards 1), (any card of cards 2) (etc).
 	 */
 	private List<ImmutableSet<Card>> combos(List<ImmutableSet<Card>> cardsList) {
-		List<ImmutableSet<Card>> results = Arrays.asList(new ImmutableSet<>());
+		List<ImmutableSet<Card>> results = Arrays.asList(new ImmutableSet<Card>());
 
 		for (ImmutableSet<Card> cards : cardsList) {
 			List<ImmutableSet<Card>> results1 = new ArrayList<>();
