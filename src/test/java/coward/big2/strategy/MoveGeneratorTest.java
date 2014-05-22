@@ -174,4 +174,34 @@ public class MoveGeneratorTest {
 		}
 		assertEquals(expected, results);
 	}
+	
+	@Test
+	public void testStraightFlush() throws Exception {
+		Hand hand = new Hand(ImmutableSet.asSet(
+				Card.H3, Card.D4, Card.H4, Card.H5, Card.H6, Card.H7, Card.H9
+		));
+		ImmutableSet<Card> cards = hand.getCards();
+		
+		List<ImmutableSet<Card>> rankedCards = moveGenerator.groupSameRanks(cards);
+		List<ImmutableSet<Card>> straight = new ArrayList<>();
+		moveGenerator.generateStraight(cards, rankedCards, straight);
+		
+		List<ImmutableSet<Card>> flush = new ArrayList<>();
+		moveGenerator.generateFlush(cards, flush);
+		
+		List<ImmutableSet<Card>> straightFlush = moveGenerator.generateStraightFlush(straight, flush);
+		
+		List<ImmutableSet<Card>> expected = new ArrayList<>();
+		Card[][] sets = new Card[][] {
+			{Card.H3, Card.H4, Card.H5, Card.H6, Card.H7}
+		};
+		for (Card[] cards2 : sets) {
+			ImmutableSet<Card> set = new ImmutableSet<>();
+			for (Card card : cards2) {
+				set = set.add(card);
+			}
+			expected.add(set);
+		}
+		assertEquals(expected, straightFlush);
+	}
 }

@@ -22,7 +22,6 @@ import coward.immutable.ImmutableSet;
 /**
  * Generate all possible moves based on a hand.
  * 
- * TODO generate flush, straight flush
  */
 public class MoveGenerator {
 	private static final Log log = LogFactory.getLog(MoveGenerator.class);
@@ -36,12 +35,44 @@ public class MoveGenerator {
 		generateSameRank(rankedCards, results);
 		generateFullHouse(rankedCards, results);
 		generateFourOne(hand.getCards(), rankedCards, results);
-		generateStraight(hand.getCards(), rankedCards, results);
-		generateFlush(hand.getCards(), results);
+		generateStraightOrFlush(hand, rankedCards, results);
 
 		return results;
 	}
+	
+	void generateStraightOrFlush(Hand hand, List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
+		List<ImmutableSet<Card>> flush = new ArrayList<>();
+		List<ImmutableSet<Card>> straight = new ArrayList<>();
+		generateStraight(hand.getCards(), rankedCards, straight);
+		generateFlush(hand.getCards(), flush);
+		
+		List<ImmutableSet<Card>> straightFlush = generateStraightFlush(straight, flush);
+		
+		results.addAll(straight);
+		results.addAll(flush);
+		results.addAll(straightFlush);
+	}
 
+	/**
+	 *  Straight flush is an intersect set between straight and flush.
+	 *  
+	 * @param straight	The straight flush set will be removed.
+	 * @param flush	The straight flush set will be removed.
+	 * @return Straight flush set
+	 */
+	List<ImmutableSet<Card>> generateStraightFlush(List<ImmutableSet<Card>> straight, List<ImmutableSet<Card>> flush) {
+		// Minus straightFlush from straight and flush
+		List<ImmutableSet<Card>> straightFlush = new ArrayList<>();
+		straightFlush.addAll(straight);
+		straightFlush.retainAll(flush);
+		
+		straight.removeAll(straightFlush);
+		flush.removeAll(straightFlush);
+		
+		log.debug("straight flush: " + straightFlush);
+		return straightFlush;
+	}
+	
 	/**
 	 * Five cards in same suit. eg. 1H,3H,7H,8H,9H
 	 * 
