@@ -1,4 +1,4 @@
-	package coward.big2.card;
+package coward.big2.card;
 
 import java.util.function.Function;
 
