@@ -13,9 +13,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
 import coward.big2.Hand;
 import coward.big2.card.Card;
 import coward.big2.card.Move;
@@ -187,10 +184,8 @@ public class MoveGenerator {
 	}
 
 	List<ImmutableSet<Card>> groupSameRanks(ImmutableSet<Card> cards) {
-		Multimap<Rank, Card> cardsByRank = ArrayListMultimap.create();
-
-		for (Card card : cards)
-			cardsByRank.put(card.getRank(), card);
+		Map<Rank, List<Card>> cardsByRank = cards.toOrderedSet().stream() //
+				.collect(Collectors.groupingBy(Card::getRank));
 
 		Set<Rank> sorted = new TreeSet<>();
 		sorted.addAll(cardsByRank.keySet());
