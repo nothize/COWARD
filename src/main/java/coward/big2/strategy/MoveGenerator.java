@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
@@ -200,10 +201,8 @@ public class MoveGenerator {
 	}
 
 	List<ImmutableSet<Card>> groupSameSuits(ImmutableSet<Card> cards) {
-		Multimap<Suit, Card> cardsBySuit = ArrayListMultimap.create();
-
-		for (Card card : cards)
-			cardsBySuit.put(card.getSuit(), card);
+		Map<Suit, List<Card>> cardsBySuit = cards.toOrderedSet().stream() //
+				.collect(Collectors.groupingBy(Card::getSuit));
 
 		return cardsBySuit.keySet().stream() //
 				.map(suit -> new ImmutableSet<>(cardsBySuit.get(suit))) //
