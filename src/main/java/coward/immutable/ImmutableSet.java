@@ -45,13 +45,11 @@ public class ImmutableSet<T extends Comparable<? super T>> implements Iterable<T
 	}
 
 	public ImmutableSet() {
-		this(new Comparator<T>() {
-			public int compare(T t0, T t1) {
-				if (t0 == null ^ t1 == null)
-					return t0 != null ? 1 : -1;
-				else
-					return t0 != null ? t0.compareTo(t1) : 0;
-			}
+		this((t0, t1) -> {
+			if (t0 == null ^ t1 == null)
+				return t0 != null ? 1 : -1;
+			else
+				return t0 != null ? t0.compareTo(t1) : 0;
 		});
 	}
 
