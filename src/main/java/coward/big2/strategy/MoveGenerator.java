@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -197,12 +198,9 @@ public class MoveGenerator {
 		for (Card card : cards)
 			cardsBySuit.put(card.getSuit(), card);
 
-		Set<Suit> sorted = new TreeSet<>();
-		sorted.addAll(cardsBySuit.keySet());
-		List<ImmutableSet<Card>> results = new ArrayList<>();
-		for (Suit suit : sorted)
-			results.add(new ImmutableSet<>(cardsBySuit.get(suit)));
-		return results;
+		return cardsBySuit.keySet().stream() //
+				.map(suit -> new ImmutableSet<>(cardsBySuit.get(suit))) //
+				.collect(Collectors.toList());
 	}
 
 	/**
