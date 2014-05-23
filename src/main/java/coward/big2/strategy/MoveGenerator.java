@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
@@ -16,6 +17,8 @@ import com.google.common.collect.Multimap;
 
 import coward.big2.Hand;
 import coward.big2.card.Card;
+import coward.big2.card.Move;
+import coward.big2.card.Move.MoveType;
 import coward.big2.card.Rank;
 import coward.big2.card.Suit;
 import coward.immutable.ImmutableSet;
@@ -29,29 +32,29 @@ public class MoveGenerator {
 
 	private ImmutableSet<Card> empty = new ImmutableSet<Card>();
 
-	public List<ImmutableSet<Card>> generate(Hand hand) {
+	public List<Move> generate(Hand hand) {
 		List<ImmutableSet<Card>> rankedCards = groupSameRanks(hand.getCards());
-		List<ImmutableSet<Card>> results = new ArrayList<>();
+		List<Move> results = new ArrayList<>();
 
-		generateSameRank(rankedCards, results);
-		generateFullHouse(rankedCards, results);
-		generateFourOne(hand.getCards(), rankedCards, results);
+		generateSameRank(rankedCards, results::add);
+		generateFullHouse(rankedCards, cards -> results.add(new Move(MoveType.FULLHOUSE, cards)));
+		generateFourOne(hand.getCards(), rankedCards, cards -> results.add(new Move(MoveType.FOURONE, cards)));
 		generateStraightOrFlush(hand, rankedCards, results);
 
 		return results;
 	}
 	
-	void generateStraightOrFlush(Hand hand, List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
+	void generateStraightOrFlush(Hand hand, List<ImmutableSet<Card>> rankedCards, List<Move> results) {
 		List<ImmutableSet<Card>> flush = new ArrayList<>();
 		List<ImmutableSet<Card>> straight = new ArrayList<>();
 		generateStraight(hand.getCards(), rankedCards, straight);
-		generateFlush(hand.getCards(), flush);
+		generateFlush(hand.getCards(), flush::add);
 		
 		List<ImmutableSet<Card>> straightFlush = generateStraightFlush(straight, flush);
 		
-		results.addAll(straight);
-		results.addAll(flush);
-		results.addAll(straightFlush);
+		straight.stream().forEach(cards -> new Move(MoveType.STRAIGHT, cards));
+		flush.stream().forEach(cards -> new Move(MoveType.FLUSH, cards));
+		straightFlush.stream().forEach(cards -> new Move(MoveType.STRAIGHTFLUSH, cards));
 	}
 
 	/**
@@ -78,14 +81,14 @@ public class MoveGenerator {
 	 * Five cards in same suit. eg. 1H,3H,7H,8H,9H
 	 * 
 	 * @param cards
-	 * @param results
+	 * @param consumer
 	 */
-	void generateFlush(ImmutableSet<Card> cards, List<ImmutableSet<Card>> results) {
+	void generateFlush(ImmutableSet<Card> cards, Consumer<ImmutableSet<Card>> consumer) {
 		List<ImmutableSet<Card>> suitedCards = groupSameSuits(cards);
 		for (ImmutableSet<Card> sameSuits : suitedCards) {
 			if ( sameSuits.size() >= 5 ) {
 				log.debug("Flush combo: " + sameSuits);
-				combos(sameSuits, 5, results);
+				combos(sameSuits, 5, consumer);
 			}
 		}
 	}
@@ -116,15 +119,15 @@ public class MoveGenerator {
 		results.addAll(combos(subList));
 	}
 
-	public void generateFourOne(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
-		generateMn(1, 4, rankedCards, results);
+	public void generateFourOne(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards, Consumer<ImmutableSet<Card>> consumer) {
+		generateMn(1, 4, rankedCards, consumer);
 	}
 
-	public void generateFullHouse(List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
-		generateMn(2, 3, rankedCards, results);
+	public void generateFullHouse(List<ImmutableSet<Card>> rankedCards, Consumer<ImmutableSet<Card>> consumer) {
+		generateMn(2, 3, rankedCards, consumer);
 	}
 
-	private void generateMn(int m, int n, List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
+	private void generateMn(int m, int n, List<ImmutableSet<Card>> rankedCards, Consumer<ImmutableSet<Card>> consume) {
 		// Find ranks with at least 3 pairs and 2 pairs
 		List<ImmutableSet<Card>> nss = new ArrayList<>();
 		List<ImmutableSet<Card>> mss = new ArrayList<>();
@@ -145,11 +148,11 @@ public class MoveGenerator {
 		List<ImmutableSet<Card>> ns = new ArrayList<>();
 		// Generate the permutation set of all twos
 		for (ImmutableSet<Card> cards : mss) {
-			combos(cards, m, ms);
+			combos(cards, m, ms::add);
 		}
 		// Generate the permutation set of all threes
 		for (ImmutableSet<Card> cards : nss) {
-			combos(cards, n, ns);
+			combos(cards, n, ns::add);
 		}
 		log.debug("threes: " + ns);
 		log.debug("twos: " + ms);
@@ -157,7 +160,7 @@ public class MoveGenerator {
 		for (ImmutableSet<Card> ncards : ns) {
 			for (ImmutableSet<Card> mcards : ms) {
 				if (!isSameRank(ncards, mcards)) {
-					results.add(ncards.addAll(mcards));
+					consume.accept(ncards.addAll(mcards));
 				}
 			}
 		}
@@ -171,11 +174,15 @@ public class MoveGenerator {
 		return cards.iterator().next().getRank();
 	}
 
-	private void generateSameRank(List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
+	private MoveType sameRankMoveTypes[] = { null, MoveType.SINGLE, MoveType.DOUBLE, MoveType.TRIPLE, MoveType.QUADRUPLE };
+
+	private void generateSameRank(List<ImmutableSet<Card>> rankedCards, Consumer<Move> consumer) {
 		// Generate singles/pairs/triples/quadruples
 		for (ImmutableSet<Card> cards : rankedCards)
-			for (int i = 1; i <= cards.size(); i++)
-				combos(cards, i, results);
+			for (int i = 1; i <= cards.size(); i++) {
+				MoveType moveType = sameRankMoveTypes[i];
+				combos(cards, i, cards_ -> consumer.accept(new Move(moveType, cards_)));
+			}
 	}
 
 	List<ImmutableSet<Card>> groupSameRanks(ImmutableSet<Card> cards) {
@@ -225,23 +232,23 @@ public class MoveGenerator {
 	 * Pick combinations of 'size' cards from first parameter, and add into
 	 * results parameter.
 	 */
-	void combos(ImmutableSet<Card> cards, int size, List<ImmutableSet<Card>> results) {
+	void combos(ImmutableSet<Card> cards, int size, Consumer<ImmutableSet<Card>> consumer) {
 		int diff = cards.size() - size;
 		if (diff >= 0)
-			combos(cards, diff, empty, results);
+			combos(cards, diff, empty, consumer);
 	}
 
-	private void combos(ImmutableSet<Card> cards, int diff, ImmutableSet<Card> cards0, List<ImmutableSet<Card>> results) {
+	private void combos(ImmutableSet<Card> cards, int diff, ImmutableSet<Card> cards0, Consumer<ImmutableSet<Card>> consumer) {
 		Iterator<Card> iter = cards.iterator();
 		if (diff > 0) {
 			if (iter.hasNext()) {
 				Card first = iter.next();
 				ImmutableSet<Card> remainingCards = cards.remove(first);
-				combos(remainingCards, diff - 1, cards0, results);
-				combos(remainingCards, diff, cards0.add(first), results);
+				combos(remainingCards, diff - 1, cards0, consumer);
+				combos(remainingCards, diff, cards0.add(first), consumer);
 			}
 		} else
-			results.add(cards.addAll(cards0));
+			consumer.accept(cards.addAll(cards0));
 	}
 
 }

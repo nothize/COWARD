@@ -50,7 +50,7 @@ public class MoveGeneratorTest {
 	public void testPermute3() throws Exception {
 		List<ImmutableSet<Card>> results = new ArrayList<>();
 		moveGenerator.combos(ImmutableSet.asSet(Card.SA, Card.HA, Card.CA), 
-				3, results);
+				3, results::add);
 		assertEquals(1, results.size());
 		ImmutableSet<Card> cards = results.get(0);
 		assertEquals(3, cards.size());
@@ -68,7 +68,7 @@ public class MoveGeneratorTest {
 		List<ImmutableSet<Card>> rankedCards = moveGenerator.groupSameRanks(hand.getCards());
 		List<ImmutableSet<Card>> results = new ArrayList<>();
 
-		moveGenerator.generateFullHouse(rankedCards, results);
+		moveGenerator.generateFullHouse(rankedCards, results::add);
 		log.debug("result: " + results);
 		
 		assertEquals(4, results.size());
@@ -80,7 +80,7 @@ public class MoveGeneratorTest {
 		rankedCards = moveGenerator.groupSameRanks(hand.getCards());
 		results = new ArrayList<>();
 
-		moveGenerator.generateFullHouse(rankedCards, results);
+		moveGenerator.generateFullHouse(rankedCards, results::add);
 		log.debug("result: " + results);
 		
 		assertEquals(6, results.size());
@@ -96,7 +96,7 @@ public class MoveGeneratorTest {
 		List<ImmutableSet<Card>> rankedCards = moveGenerator.groupSameRanks(cards);
 		List<ImmutableSet<Card>> results = new ArrayList<>();
 
-		moveGenerator.generateFourOne(cards, rankedCards, results);
+		moveGenerator.generateFourOne(cards, rankedCards, results::add);
 		log.debug("result: " + results);
 		
 		assertEquals(2, results.size());
@@ -109,7 +109,7 @@ public class MoveGeneratorTest {
 		rankedCards = moveGenerator.groupSameRanks(cards);
 		results = new ArrayList<>();
 
-		moveGenerator.generateFourOne(cards, rankedCards, results);
+		moveGenerator.generateFourOne(cards, rankedCards, results::add);
 		log.debug("result: " + results);
 		
 		assertEquals(8, results.size());
@@ -153,7 +153,7 @@ public class MoveGeneratorTest {
 		));
 		ImmutableSet<Card> cards = hand.getCards();
 		List<ImmutableSet<Card>> results = new ArrayList<>();
-		moveGenerator.generateFlush(cards, results);
+		moveGenerator.generateFlush(cards, results::add);
 		log.debug("flush: " + results);
 		
 		List<ImmutableSet<Card>> expected = new ArrayList<>();
@@ -187,7 +187,7 @@ public class MoveGeneratorTest {
 		moveGenerator.generateStraight(cards, rankedCards, straight);
 		
 		List<ImmutableSet<Card>> flush = new ArrayList<>();
-		moveGenerator.generateFlush(cards, flush);
+		moveGenerator.generateFlush(cards, flush::add);
 		
 		List<ImmutableSet<Card>> straightFlush = moveGenerator.generateStraightFlush(straight, flush);
 		
