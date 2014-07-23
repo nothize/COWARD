@@ -28,31 +28,49 @@ import coward.immutable.ImmutableSet;
 public class MoveGenerator {
 	private static final Log log = LogFactory.getLog(MoveGenerator.class);
 
+	private final MoveType sameRankMoveTypes[] = { null, MoveType.SINGLE, MoveType.DOUBLE, MoveType.TRIPLE, MoveType.QUADRUPLE };
+
 	private ImmutableSet<Card> empty = new ImmutableSet<Card>();
 
-	public List<Move> generate(Hand hand) {
+	public List<Move> generateMoves(Hand hand) {
 		List<ImmutableSet<Card>> rankedCards = groupSameRanks(hand.getCards());
 		List<Move> results = new ArrayList<>();
 
-		generateSameRank(rankedCards, results::add);
-		generateFullHouse(rankedCards, cards -> results.add(new Move(MoveType.FULLHOUSE, cards)));
-		generateFourOne(hand.getCards(), rankedCards, cards -> results.add(new Move(MoveType.FOURONE, cards)));
-		generateStraightOrFlush(hand, rankedCards, results);
+		generateSameRankMoves(rankedCards, results::add);
+		generateFiveCardMoves(hand, rankedCards, results::add);
 
 		return results;
 	}
 	
-	void generateStraightOrFlush(Hand hand, List<ImmutableSet<Card>> rankedCards, List<Move> results) {
+	public List<Move> generateMoves(Hand hand, int n) {
+		List<ImmutableSet<Card>> rankedCards = groupSameRanks(hand.getCards());
+		List<Move> results = new ArrayList<>();
+
+		if (n != 5)
+			generateSameRankMoves(rankedCards, n, results::add);
+		else
+			generateFiveCardMoves(hand, rankedCards, results::add);
+
+		return results;
+	}
+
+	private void generateFiveCardMoves(Hand hand, List<ImmutableSet<Card>> rankedCards, Consumer<Move> consumer) {
+		generateFullHouseCards(rankedCards, cards -> consumer.accept(new Move(MoveType.FULLHOUSE, cards)));
+		generateFourOneCards(hand.getCards(), rankedCards, cards -> consumer.accept(new Move(MoveType.FOURONE, cards)));
+		generateStraightOrFlushMoves(hand, rankedCards, consumer);
+	}
+	
+	void generateStraightOrFlushMoves(Hand hand, List<ImmutableSet<Card>> rankedCards, Consumer<Move> consumer) {
 		List<ImmutableSet<Card>> flush = new ArrayList<>();
 		List<ImmutableSet<Card>> straight = new ArrayList<>();
-		generateStraight(hand.getCards(), rankedCards, straight);
+		generateStraightCards(hand.getCards(), rankedCards, straight);
 		generateFlush(hand.getCards(), flush::add);
 		
-		List<ImmutableSet<Card>> straightFlush = generateStraightFlush(straight, flush);
-		
-		straight.stream().forEach(cards -> new Move(MoveType.STRAIGHT, cards));
-		flush.stream().forEach(cards -> new Move(MoveType.FLUSH, cards));
-		straightFlush.stream().forEach(cards -> new Move(MoveType.STRAIGHTFLUSH, cards));
+		List<ImmutableSet<Card>> straightFlush = generateStraightFlushCards(straight, flush);
+
+		straight.stream().forEach(cards -> consumer.accept(new Move(MoveType.STRAIGHT, cards)));
+		flush.stream().forEach(cards -> consumer.accept(new Move(MoveType.FLUSH, cards)));
+		straightFlush.stream().forEach(cards -> consumer.accept(new Move(MoveType.STRAIGHTFLUSH, cards)));
 	}
 
 	/**
@@ -62,7 +80,7 @@ public class MoveGenerator {
 	 * @param flush	The straight flush set will be removed.
 	 * @return Straight flush set
 	 */
-	List<ImmutableSet<Card>> generateStraightFlush(List<ImmutableSet<Card>> straight, List<ImmutableSet<Card>> flush) {
+	List<ImmutableSet<Card>> generateStraightFlushCards(List<ImmutableSet<Card>> straight, List<ImmutableSet<Card>> flush) {
 		// Minus straightFlush from straight and flush
 		List<ImmutableSet<Card>> straightFlush = new ArrayList<>();
 		straightFlush.addAll(straight);
@@ -98,7 +116,7 @@ public class MoveGenerator {
 	 * @param results
 	 * @param results
 	 */
-	public void generateStraight(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
+	public void generateStraightCards(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards, List<ImmutableSet<Card>> results) {
 		ImmutableSet<Card> first;
 		ImmutableSet<Card> last;
 		log.debug(rankedCards);
@@ -108,20 +126,20 @@ public class MoveGenerator {
 			// Found
 			if (getRank(first).getValue() + 4 == getRank(last).getValue()) {
 				log.debug("Found potential straight at " + first);
-				generateOneStraight(rankedCards.subList(i, i + 5), results);
+				generateOneStraightCards(rankedCards.subList(i, i + 5), results);
 			}
 		}
 	}
 
-	private void generateOneStraight(List<ImmutableSet<Card>> subList, List<ImmutableSet<Card>> results) {
+	private void generateOneStraightCards(List<ImmutableSet<Card>> subList, List<ImmutableSet<Card>> results) {
 		results.addAll(combos(subList));
 	}
 
-	public void generateFourOne(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards, Consumer<ImmutableSet<Card>> consumer) {
+	public void generateFourOneCards(ImmutableSet<Card> allCards, List<ImmutableSet<Card>> rankedCards, Consumer<ImmutableSet<Card>> consumer) {
 		generateMn(1, 4, rankedCards, consumer);
 	}
 
-	public void generateFullHouse(List<ImmutableSet<Card>> rankedCards, Consumer<ImmutableSet<Card>> consumer) {
+	public void generateFullHouseCards(List<ImmutableSet<Card>> rankedCards, Consumer<ImmutableSet<Card>> consumer) {
 		generateMn(2, 3, rankedCards, consumer);
 	}
 
@@ -172,15 +190,22 @@ public class MoveGenerator {
 		return cards.iterator().next().getRank();
 	}
 
-	private MoveType sameRankMoveTypes[] = { null, MoveType.SINGLE, MoveType.DOUBLE, MoveType.TRIPLE, MoveType.QUADRUPLE };
-
-	private void generateSameRank(List<ImmutableSet<Card>> rankedCards, Consumer<Move> consumer) {
+	private void generateSameRankMoves(List<ImmutableSet<Card>> rankedCards, Consumer<Move> consumer) {
 		// Generate singles/pairs/triples/quadruples
 		for (ImmutableSet<Card> cards : rankedCards)
-			for (int i = 1; i <= cards.size(); i++) {
-				MoveType moveType = sameRankMoveTypes[i];
-				combos(cards, i, cards_ -> consumer.accept(new Move(moveType, cards_)));
-			}
+			for (int i = 1; i <= cards.size(); i++)
+				generateComboMoves(cards, i, consumer);
+	}
+
+	private void generateSameRankMoves(List<ImmutableSet<Card>> rankedCards, int n, Consumer<Move> consumer) {
+		// Generate singles/pairs/triples/quadruples
+		for (ImmutableSet<Card> cards : rankedCards)
+			if (cards.size() == n)
+				generateComboMoves(cards, n, consumer);
+	}
+
+	private void generateComboMoves(ImmutableSet<Card> cards, int n, Consumer<Move> consumer) {
+		combos(cards, n, cards_ -> consumer.accept(new Move(sameRankMoveTypes[n], cards_)));
 	}
 
 	List<ImmutableSet<Card>> groupSameRanks(ImmutableSet<Card> cards) {

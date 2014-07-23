@@ -22,14 +22,14 @@ public class MoveGeneratorTest {
 	public void test() {
 
 		// 2 single combos
-		assertEquals(2, moveGenerator.generate(new Hand(ImmutableSet.asSet( //
+		assertEquals(2, moveGenerator.generateMoves(new Hand(ImmutableSet.asSet( //
 				Card.CA //
 				, Card.D2 //
 				))).size());
 
 		// 2 single combos
 		// 1 double combos
-		assertEquals(3, moveGenerator.generate(new Hand(ImmutableSet.asSet( //
+		assertEquals(3, moveGenerator.generateMoves(new Hand(ImmutableSet.asSet( //
 				Card.CA //
 				, Card.DA //
 				))).size());
@@ -38,7 +38,7 @@ public class MoveGeneratorTest {
 		// 6 double combos
 		// 4 triple combos
 		// 1 quadruple combos
-		assertEquals(15, moveGenerator.generate(new Hand(ImmutableSet.asSet( //
+		assertEquals(15, moveGenerator.generateMoves(new Hand(ImmutableSet.asSet( //
 				Card.CA //
 				, Card.DA //
 				, Card.HA //
@@ -68,7 +68,7 @@ public class MoveGeneratorTest {
 		List<ImmutableSet<Card>> rankedCards = moveGenerator.groupSameRanks(hand.getCards());
 		List<ImmutableSet<Card>> results = new ArrayList<>();
 
-		moveGenerator.generateFullHouse(rankedCards, results::add);
+		moveGenerator.generateFullHouseCards(rankedCards, results::add);
 		log.debug("result: " + results);
 		
 		assertEquals(4, results.size());
@@ -80,7 +80,7 @@ public class MoveGeneratorTest {
 		rankedCards = moveGenerator.groupSameRanks(hand.getCards());
 		results = new ArrayList<>();
 
-		moveGenerator.generateFullHouse(rankedCards, results::add);
+		moveGenerator.generateFullHouseCards(rankedCards, results::add);
 		log.debug("result: " + results);
 		
 		assertEquals(6, results.size());
@@ -96,7 +96,7 @@ public class MoveGeneratorTest {
 		List<ImmutableSet<Card>> rankedCards = moveGenerator.groupSameRanks(cards);
 		List<ImmutableSet<Card>> results = new ArrayList<>();
 
-		moveGenerator.generateFourOne(cards, rankedCards, results::add);
+		moveGenerator.generateFourOneCards(cards, rankedCards, results::add);
 		log.debug("result: " + results);
 		
 		assertEquals(2, results.size());
@@ -109,7 +109,7 @@ public class MoveGeneratorTest {
 		rankedCards = moveGenerator.groupSameRanks(cards);
 		results = new ArrayList<>();
 
-		moveGenerator.generateFourOne(cards, rankedCards, results::add);
+		moveGenerator.generateFourOneCards(cards, rankedCards, results::add);
 		log.debug("result: " + results);
 		
 		assertEquals(8, results.size());
@@ -124,7 +124,7 @@ public class MoveGeneratorTest {
 		ImmutableSet<Card> cards = hand.getCards();
 		List<ImmutableSet<Card>> rankedCards = moveGenerator.groupSameRanks(cards);
 		List<ImmutableSet<Card>> results = new ArrayList<>();
-		moveGenerator.generateStraight(cards, rankedCards, results);
+		moveGenerator.generateStraightCards(cards, rankedCards, results);
 		
 		ImmutableSet<Card> set1 = ImmutableSet.asSet(
 			Card.C3, Card.D4, Card.S5, Card.H6, Card.C7
@@ -184,12 +184,12 @@ public class MoveGeneratorTest {
 		
 		List<ImmutableSet<Card>> rankedCards = moveGenerator.groupSameRanks(cards);
 		List<ImmutableSet<Card>> straight = new ArrayList<>();
-		moveGenerator.generateStraight(cards, rankedCards, straight);
+		moveGenerator.generateStraightCards(cards, rankedCards, straight);
 		
 		List<ImmutableSet<Card>> flush = new ArrayList<>();
 		moveGenerator.generateFlush(cards, flush::add);
 		
-		List<ImmutableSet<Card>> straightFlush = moveGenerator.generateStraightFlush(straight, flush);
+		List<ImmutableSet<Card>> straightFlush = moveGenerator.generateStraightFlushCards(straight, flush);
 		
 		List<ImmutableSet<Card>> expected = new ArrayList<>();
 		Card[][] sets = new Card[][] {
